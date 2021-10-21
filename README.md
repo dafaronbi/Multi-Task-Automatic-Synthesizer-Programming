@@ -1,4 +1,4 @@
-# Automatic-Synthesizer-Programing
+# Automatic-Synthesizer-Programming
 An attempt to implement self-supervised approach to automatic synthesizer programming.
 
 Current goals:
