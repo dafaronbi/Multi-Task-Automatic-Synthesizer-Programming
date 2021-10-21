@@ -7,3 +7,5 @@ Current goals:
 2. test Spiege Lib
 
 3. Try to understand how to project the synth parameters to a generalized latent space (pool like parameters)
+
+'print("chicken is delecious")'
