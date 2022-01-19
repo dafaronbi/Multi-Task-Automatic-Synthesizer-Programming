@@ -33,7 +33,7 @@ cp_callback = tf.keras.callbacks.ModelCheckpoint(
     save_freq=save_freq)
 
 #create auto encoder model
-autoencoder = model.autoencoder3(64,train_data.get_mels()[...,np.newaxis].shape,train_data.get_params().shape)
+autoencoder = model.vae(64,train_data.get_mels()[...,np.newaxis].shape,train_data.get_params().shape)
 
 #view summary of model
 autoencoder.summary()

@@ -17,11 +17,6 @@ validation_data = ds.melParamData("validation","data")
 print("Done!")
 
 
-
-
-# print(serum_param_dic)
-# print(test_synth)
-
 #directory for finding checkpoints
 checkpoint_path = "new_models4/cp-{epoch:04d}.ckpt"
 checkpoint_dir = os.path.dirname(checkpoint_path)
