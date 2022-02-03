@@ -19,14 +19,14 @@ def main():
     o_dim = train_data.get_params().shape
 
     #dictionary to store models for each cli input
-    get_model = {"ae":model.autoencoder(l_dim,i_dim,o_dim),"ae2": model.autoencoder2(l_dim,i_dim,o_dim), "ae3": model.autoencoder3(l_dim,i_dim,o_dim), "vae": model.vae(l_dim,i_dim,o_dim)
+    get_model = {"ae":model.autoencoder(l_dim,i_dim,o_dim),"ae2": model.autoencoder2(l_dim,i_dim,o_dim), "ae3": model.autoencoder3(l_dim,i_dim,o_dim), "vae": model.vae(l_dim,i_dim,o_dim), "vae": model.vae(l_dim,i_dim,o_dim), "vae_flow": model.vae_flow(l_dim,i_dim,o_dim)
     }
 
     #dictionary of losses
-    get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ad3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError()}
+    get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ad3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError(),"vae_flow": losses.MeanSquaredError()}
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "saved_models/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "saved_models/"+ sys.argv[1] +"/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs=500

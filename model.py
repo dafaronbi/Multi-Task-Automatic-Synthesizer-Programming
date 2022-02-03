@@ -1,7 +1,13 @@
 #import needed libraries
-from tensorflow.keras import layers, losses, Model
+from tensorflow.keras import layers, losses, Model, initializers
 import tensorflow_probability as tfp
 import tensorflow as tf
+
+#shortcuts for tensorflow stuff
+tfd = tfp.distributions
+tfpl = tfp.layers
+tfb = tfp.bijectors
+tfk = tf.keras
 
 #class for sampling in vae
 class Sampling(layers.Layer):
@@ -167,6 +173,8 @@ def vae(latent_dim,input_dim, output_dim):
     #generate model
     return Model(inputs=inp, outputs=[decoder_a_deconv_2, decoder_b_out])
 
+
+
 def vae_flow(latent_dim,input_dim, output_dim):
     """
     autoencoder: Create autoencoder model
@@ -194,15 +202,17 @@ def vae_flow(latent_dim,input_dim, output_dim):
     z_dense = layers.Dense(tfp.layers.MultivariateNormalTriL.params_size(latent_dim),activation=None)(z_flat)
     z = tfp.layers.MultivariateNormalTriL(latent_dim, activity_regularizer=tfp.layers.KLDivergenceRegularizer(prior, weight=1.0))(z_dense)
 
+    # Autoregresive transformation for posterior distribution
+    zt = tfpl.AutoregressiveTransform(tfb.AutoregressiveNetwork(params=2, hidden_units=[16], activation='relu'))(z)
 
     #decoder layers to spectrogram
-    decoder_a = layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1],activation='relu')(z)
+    decoder_a = layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1],activation='relu')(zt)
     decoder_a_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_a)
     decoder_a_deconv= layers.Conv2DTranspose(8, 3, 2, "same", activation='relu',output_padding=(1,0))(decoder_a_reverse_flat)
     decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same", activation='relu',name='spectrogram',output_padding=(1,1))(decoder_a_deconv)
 
     #decoder layers to synth parameters
-    decoder_b = layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1], activation='relu')(z)
+    decoder_b = layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1], activation='relu')(zt)
     decoder_b_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_b)
     decoder_b_conv = layers.Conv2DTranspose(8, 3, 2, "same", activation='relu')(decoder_b_reverse_flat)
     decoder_b_conv_drop = layers.Dropout(.2)(decoder_b_conv)
