@@ -47,8 +47,8 @@ def main():
     #number of batches in one epoch
     batches_epoch = ds.melParamData("train","data").get_mels().shape[0] // batch_size
 
-    #save freq is every 10 epochs
-    save_freq = batches_epoch*10
+    #save freq is every 100 epochs
+    save_freq = batches_epoch*100
 
     # Create a callback that saves the model's weights every 50 epochs
     cp_callback = tf.keras.callbacks.ModelCheckpoint(
