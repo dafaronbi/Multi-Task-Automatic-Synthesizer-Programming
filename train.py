@@ -9,6 +9,11 @@ import sys
 
 
 def main():
+    #list GPUs that tensor flow can use
+    physical_devices = tf.config.list_physical_devices('GPU')
+    print("Num GPUs:", len(physical_devices))
+
+
     #load data
     train_data = ds.melParamData("train","data")
     test_data = ds.melParamData("test","data")
