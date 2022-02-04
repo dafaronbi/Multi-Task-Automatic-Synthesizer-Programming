@@ -1,6 +1,7 @@
 #import needed modules
 import numpy as np
 import ds
+import os
 import tensorflow as tf
 from tensorflow.keras import losses
 import model
@@ -24,6 +25,10 @@ def main():
 
     #dictionary of losses
     get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ad3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError(),"vae_flow": losses.MeanSquaredError()}
+
+    #make directory to save model if not already made
+    if not os.path.isdir("saved_models/"+ sys.argv[1]):
+         os.makedirs("saved_models/"+ sys.argv[1])
 
     # Include the epoch in the file name (uses `str.format`)
     checkpoint_path = "saved_models/"+ sys.argv[1] +"/cp-{epoch:04d}.ckpt"
