@@ -39,7 +39,7 @@ def main():
     checkpoint_path = "saved_models/"+ sys.argv[1] + "/cp-{epoch:04d}.ckpt"
 
     #epoch size
-    epochs=500
+    epochs= int(sys.argv[2])
 
     #batch_size
     batch_size = 32
