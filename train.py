@@ -33,10 +33,10 @@ def main():
 
     #make directory to save model if not already made
     if not os.path.isdir("saved_models/"+ sys.argv[1]):
-         os.makedirs("saved_models/"+ sys.argv[1])
+        os.makedirs("saved_models/"+ sys.argv[1])
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "saved_models/"+ sys.argv[1] +"/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "saved_models/"+ sys.argv[1] + "/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs=500
@@ -67,7 +67,7 @@ def main():
     m.compile(optimizer='adam', loss=get_loss[sys.argv[1]])
 
     #update learning rate
-    m.optimizer.lr.assign(1e-3)
+    m.optimizer.lr.assign(1e-4)
 
     #train model
     m.fit(train_data.get_mels()[...,np.newaxis],[train_data.get_mels(),train_data.get_params()], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
