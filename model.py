@@ -140,9 +140,9 @@ def vae(latent_dim,input_dim, output_dim):
     inp = layers.Input((input_dim[-3],input_dim[-2],1))
 
     #convolutional layers and pooling
-    encoder = layers.Conv2D(8,3,1,"same", activation='relu')(inp)
+    encoder = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(inp)))
     encoder_pool = layers.MaxPool2D(2,2,"same")(encoder)
-    encoder_conv = layers.Conv2D(8,3,1,"same", activation='relu')(encoder_pool)
+    encoder_conv = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(encoder_pool)))
     encoder_pool2 = layers.MaxPool2D(2, 2, "same")(encoder_conv)
 
     #latent dimentions
@@ -155,20 +155,20 @@ def vae(latent_dim,input_dim, output_dim):
 
 
     #decoder layers to spectrogram
-    decoder_a = layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1],activation='relu')(z)
+    decoder_a = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z)))
     decoder_a_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_a)
-    decoder_a_deconv= layers.Conv2DTranspose(8, 3, 2, "same", activation='relu',output_padding=(1,0))(decoder_a_reverse_flat)
-    decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same", activation='relu',name='spectrogram',output_padding=(1,1))(decoder_a_deconv)
+    decoder_a_deconv= layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2DTranspose(8, 3, 2, "same",output_padding=(1,0))(decoder_a_reverse_flat)))
+    decoder_a_deconv_2 = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',output_padding=(1,1))(decoder_a_deconv)))
 
     #decoder layers to synth parameters
-    decoder_b = layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1], activation='relu')(z)
+    decoder_b = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z)))
     decoder_b_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_b)
-    decoder_b_conv = layers.Conv2DTranspose(8, 3, 2, "same", activation='relu')(decoder_b_reverse_flat)
+    decoder_b_conv = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2DTranspose(8, 3, 2, "same")(decoder_b_reverse_flat)))
     decoder_b_conv_drop = layers.Dropout(.2)(decoder_b_conv)
     decoder_b_flat = layers.Flatten()(decoder_b_conv_drop)
-    decoder_b_inner = layers.Dense(256, activation='relu')(decoder_b_flat)
+    decoder_b_inner = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(256)(decoder_b_flat)))
     decoder_b_inner_drop = layers.Dropout(.2)(decoder_b_inner)
-    decoder_b_out = layers.Dense(output_dim[-1],name='synth_params', activation='relu')(decoder_b_inner_drop)
+    decoder_b_out = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(output_dim[-1],name='synth_params')(decoder_b_inner_drop)))
 
     #generate model
     return Model(inputs=inp, outputs=[decoder_a_deconv_2, decoder_b_out])
