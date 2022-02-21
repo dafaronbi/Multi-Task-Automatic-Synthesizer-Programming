@@ -24,12 +24,8 @@ def main():
     i_dim = train_data.get_mels()[...,np.newaxis].shape
     o_dim = train_data.get_params().shape
 
-    #dictionary to store models for each cli input
-    get_model = {"ae":model.autoencoder(l_dim,i_dim,o_dim),"ae2": model.autoencoder2(l_dim,i_dim,o_dim), "ae3": model.autoencoder3(l_dim,i_dim,o_dim), "vae": model.vae(l_dim,i_dim,o_dim), "vae": model.vae(l_dim,i_dim,o_dim), "vae_flow": model.vae_flow(l_dim,i_dim,o_dim)
-    }
-
-    #dictionary of losses
-    get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ae3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError(),"vae_flow": losses.MeanSquaredError()}
+    #get optimizer
+    optimizer = tf.keras.optimizers.Adam() 
 
     #make directory to save model if not already made
     if not os.path.isdir("saved_models/"+ sys.argv[1]):
@@ -57,6 +53,16 @@ def main():
         save_weights_only=True,
         save_freq=save_freq)
 
+    #warmup amount
+    warmup_it = 100*batches_epoch
+
+    #dictionary to store models for each cli input
+    get_model = {"ae":model.autoencoder(l_dim,i_dim,o_dim),"ae2": model.autoencoder2(l_dim,i_dim,o_dim), "ae3": model.autoencoder3(l_dim,i_dim,o_dim), "vae": model.vae(l_dim,i_dim,o_dim,optimizer,warmup_it), "vae_flow": model.vae_flow(l_dim,i_dim,o_dim)
+    }
+
+    #dictionary of losses
+    get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ae3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError(),"vae_flow": losses.MeanSquaredError()}
+
     #create model
     m = get_model[sys.argv[1]]
 
@@ -64,7 +70,7 @@ def main():
     m.summary()
 
     #compile model
-    m.compile(optimizer='adam', loss=get_loss[sys.argv[1]])
+    m.compile(optimizer=optimizer, loss=get_loss[sys.argv[1]])
 
     #update learning rate
     m.optimizer.lr.assign(1e-4)

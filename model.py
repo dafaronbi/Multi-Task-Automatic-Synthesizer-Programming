@@ -2,23 +2,40 @@
 from tensorflow.keras import layers, losses, Model, initializers
 import tensorflow_probability as tfp
 import tensorflow as tf
+import numpy as np
 
 #shortcuts for tensorflow stuff
 tfd = tfp.distributions
 tfpl = tfp.layers
 tfb = tfp.bijectors
 tfk = tf.keras
+import tensorflow.keras.backend as K
 
 #class for sampling in vae
 class Sampling(layers.Layer):
     """Uses (z_mean, z_log_var) to sample z, the vector encoding a digit."""
-
+    
+    @tf.function
     def call(self, inputs):
         z_mean, z_log_var = inputs
         batch = tf.shape(z_mean)[0]
         dim = tf.shape(z_mean)[1]
         epsilon = tf.keras.backend.random_normal(shape=(batch, dim))
         return z_mean + tf.exp(0.5 * z_log_var) * epsilon
+
+#class for regularizarion with warmup
+class W_KLDivergenceRegularizer(tf.keras.regularizers.Regularizer):
+    def __init__(self, iters: tf.Variable, warm_up_iters: int):
+        self._iters = np.array([iters])
+        self._warm_up_iters = np.array([warm_up_iters])
+
+    @tf.function
+    def __call__(self, activation):
+        # note: activity regularizers automatically divide by batch size
+        mu =  activation[:64]
+        log_var = activation[64:]
+        k = np.min([self._iters / self._warm_up_iters, 1])
+        return -0.5 * k * K.sum(1 + log_var - K.square(mu) - K.exp(log_var))
 
 
 
@@ -126,7 +143,7 @@ def autoencoder3(latent_dim,input_dim, output_dim):
     #generate model
     return Model(inputs=inp, outputs=[decoder_2, decoder_b])
 
-def vae(latent_dim,input_dim, output_dim):
+def vae(latent_dim,input_dim, output_dim,optimizer,warmup_it):
     """
     autoencoder: Create autoencoder model
     :param latent_dim (numpy.shape): size of latent dimensions
@@ -147,18 +164,19 @@ def vae(latent_dim,input_dim, output_dim):
 
     #latent dimentions
     z_flat = layers.Flatten()(encoder_pool2)
-    # z_mean = layers.Dense(latent_dim, name="z_mean")(z_flat)
-    # z_log_var = layers.Dense(latent_dim, name="z_log_var")(z_flat)
-    # z = Sampling(activity_regularizer=tfp.layers.KLDivergenceRegularizer(prior, weight=1.0))([z_mean, z_log_var])
-    z_dense = layers.Dense(tfp.layers.MultivariateNormalTriL.params_size(latent_dim),activation=None)(z_flat)
-    z = tfp.layers.MultivariateNormalTriL(latent_dim, activity_regularizer=tfp.layers.KLDivergenceRegularizer(prior, weight=1.0))(z_dense)
+    z_mean = layers.Dense(latent_dim, name="z_mean")(z_flat)
+    z_log_var = layers.Dense(latent_dim, name="z_log_var",)(z_flat)
+    z_regular = tf.keras.layers.Concatenate(activity_regularizer=W_KLDivergenceRegularizer(optimizer.iterations,warmup_it))([z_mean,z_log_var])
+    z = Sampling()([z_mean, z_log_var])
+    # z_dense = layers.Dense(tfp.layers.MultivariateNormalTriL.params_size(latent_dim),activation=None)(z_flat)
+    # z = tfp.layers.MultivariateNormalTriL(latent_dim, activity_regularizer=W_KLDivergenceRegularizer(optimizer.iterations,warmup_it))(z_dense)
 
 
     #decoder layers to spectrogram
     decoder_a = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z)))
     decoder_a_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_a)
     decoder_a_deconv= layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2DTranspose(8, 3, 2, "same",output_padding=(1,0))(decoder_a_reverse_flat)))
-    decoder_a_deconv_2 = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',output_padding=(1,1))(decoder_a_deconv)))
+    decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',activation= "tanh",output_padding=(1,1))(decoder_a_deconv)
 
     #decoder layers to synth parameters
     decoder_b = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z)))
@@ -168,7 +186,7 @@ def vae(latent_dim,input_dim, output_dim):
     decoder_b_flat = layers.Flatten()(decoder_b_conv_drop)
     decoder_b_inner = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(256)(decoder_b_flat)))
     decoder_b_inner_drop = layers.Dropout(.2)(decoder_b_inner)
-    decoder_b_out = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(output_dim[-1],name='synth_params')(decoder_b_inner_drop)))
+    decoder_b_out = layers.Dense(output_dim[-1],name='synth_params', activation="tanh")(decoder_b_inner_drop)
 
     #generate model
     return Model(inputs=inp, outputs=[decoder_a_deconv_2, decoder_b_out])
