@@ -24,9 +24,6 @@ def main():
     i_dim = train_data.get_mels()[...,np.newaxis].shape
     o_dim = train_data.get_params().shape
 
-    #get optimizer
-    optimizer = tf.keras.optimizers.Adam() 
-
     #make directory to save model if not already made
     if not os.path.isdir("saved_models/"+ sys.argv[1]):
         os.makedirs("saved_models/"+ sys.argv[1])
@@ -40,11 +37,8 @@ def main():
     #batch_size
     batch_size = 32
 
-    #number of batches in one epoch
-    batches_epoch = ds.melParamData("train","data").get_mels().shape[0] // batch_size
-
     #save freq is every 100 epochs
-    save_freq = batches_epoch*100
+    save_freq = model.batches_epoch*100
 
     # Create a callback that saves the model's weights every 50 epochs
     cp_callback = tf.keras.callbacks.ModelCheckpoint(
@@ -53,24 +47,17 @@ def main():
         save_weights_only=True,
         save_freq=save_freq)
 
-    #warmup amount
-    warmup_it = 100*batches_epoch
-
-    #dictionary to store models for each cli input
-    get_model = {"ae":model.autoencoder(l_dim,i_dim,o_dim),"ae2": model.autoencoder2(l_dim,i_dim,o_dim), "ae3": model.autoencoder3(l_dim,i_dim,o_dim), "vae": model.vae(l_dim,i_dim,o_dim,optimizer,warmup_it), "vae_flow": model.vae_flow(l_dim,i_dim,o_dim)
-    }
-
     #dictionary of losses
     get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ae3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError(),"vae_flow": losses.MeanSquaredError()}
 
     #create model
-    m = get_model[sys.argv[1]]
+    m = model.get_model[sys.argv[1]]
 
     #view summary of model
     m.summary()
 
     #compile model
-    m.compile(optimizer=optimizer, loss=get_loss[sys.argv[1]])
+    m.compile(optimizer=model.optimizer, loss=get_loss[sys.argv[1]])
 
     #update learning rate
     m.optimizer.lr.assign(1e-4)

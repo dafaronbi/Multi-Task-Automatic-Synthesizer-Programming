@@ -11,6 +11,23 @@ tfb = tfp.bijectors
 tfk = tf.keras
 import tensorflow.keras.backend as K
 
+#define shapes
+l_dim = 64
+i_dim = (8994, 128, 174, 1)
+o_dim = (8994, 288)
+
+#get optimizer
+optimizer = tf.keras.optimizers.Adam() 
+
+#batch_size
+batch_size = 32
+
+#number of batches in one epoch
+batches_epoch = i_dim[0] // batch_size
+
+#warmup amount
+warmup_it = 100*batches_epoch
+
 #class for sampling in vae
 class Sampling(layers.Layer):
     """Uses (z_mean, z_log_var) to sample z, the vector encoding a digit."""
@@ -241,3 +258,8 @@ def vae_flow(latent_dim,input_dim, output_dim):
 
     #generate model
     return Model(inputs=inp, outputs=[decoder_a_deconv_2, decoder_b_out])
+
+
+#dictionary to store models for each cli input
+get_model = {"ae":autoencoder(l_dim,i_dim,o_dim),"ae2": autoencoder2(l_dim,i_dim,o_dim), "ae3": autoencoder3(l_dim,i_dim,o_dim), "vae": vae(l_dim,i_dim,o_dim,optimizer,warmup_it), "vae_flow": vae_flow(l_dim,i_dim,o_dim)}
+
