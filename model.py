@@ -52,6 +52,7 @@ class W_KLDivergenceRegularizer(tf.keras.regularizers.Regularizer):
         mu =  activation[:64]
         log_var = activation[64:]
         k = np.min([self._iters / self._warm_up_iters, 1])
+        tf.print("hi")
         return -0.5 * k * K.sum(1 + log_var - K.square(mu) - K.exp(log_var))
 
 
@@ -196,12 +197,12 @@ def vae(latent_dim,input_dim, output_dim,optimizer,warmup_it):
     decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',activation= "tanh",output_padding=(1,1))(decoder_a_deconv)
 
     #decoder layers to synth parameters
-    decoder_b = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z)))
+    decoder_b = layers.Activation('relu')(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z))
     decoder_b_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_b)
-    decoder_b_conv = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2DTranspose(8, 3, 2, "same")(decoder_b_reverse_flat)))
+    decoder_b_conv = layers.Activation('relu')(layers.Conv2DTranspose(8, 3, 2, "same")(decoder_b_reverse_flat))
     decoder_b_conv_drop = layers.Dropout(.2)(decoder_b_conv)
     decoder_b_flat = layers.Flatten()(decoder_b_conv_drop)
-    decoder_b_inner = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(256)(decoder_b_flat)))
+    decoder_b_inner = layers.Activation('relu')(layers.Dense(256)(decoder_b_flat))
     decoder_b_inner_drop = layers.Dropout(.2)(decoder_b_inner)
     decoder_b_out = layers.Dense(output_dim[-1],name='synth_params', activation="tanh")(decoder_b_inner_drop)
 
