@@ -191,9 +191,9 @@ def vae(latent_dim,input_dim, output_dim,optimizer,warmup_it):
 
 
     #decoder layers to spectrogram
-    decoder_a = layers.Activation('relu')(layers.BatchNormalization()(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z)))
+    decoder_a = layers.Activation('relu')(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z))
     decoder_a_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_a)
-    decoder_a_deconv= layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2DTranspose(8, 3, 2, "same",output_padding=(1,0))(decoder_a_reverse_flat)))
+    decoder_a_deconv= layers.Activation('relu')(layers.Conv2DTranspose(8, 3, 2, "same",output_padding=(1,0))(decoder_a_reverse_flat))
     decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',activation= "tanh",output_padding=(1,1))(decoder_a_deconv)
 
     #decoder layers to synth parameters
