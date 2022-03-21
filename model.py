@@ -13,8 +13,8 @@ import tensorflow.keras.backend as K
 
 #define shapes
 l_dim = 64
-i_dim = (8994, 128, 174, 1)
-o_dim = (8994, 288)
+i_dim = (25000, 128, 431, 1)
+o_dim = (25000, 315)
 
 #get optimizer
 optimizer = tf.keras.optimizers.Adam() 
@@ -193,8 +193,8 @@ def vae(latent_dim,input_dim, output_dim,optimizer,warmup_it):
     #decoder layers to spectrogram
     decoder_a = layers.Activation('relu')(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z))
     decoder_a_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_a)
-    decoder_a_deconv= layers.Activation('relu')(layers.Conv2DTranspose(8, 3, 2, "same",output_padding=(1,0))(decoder_a_reverse_flat))
-    decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',activation= "tanh",output_padding=(1,1))(decoder_a_deconv)
+    decoder_a_deconv= layers.Activation('relu')(layers.Conv2DTranspose(8, 3, 2, "same",output_padding=(1,1))(decoder_a_reverse_flat))
+    decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',activation= "tanh",output_padding=(1,0))(decoder_a_deconv)
 
     #decoder layers to synth parameters
     decoder_b = layers.Activation('relu')(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z))

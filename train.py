@@ -24,6 +24,9 @@ def main():
     i_dim = train_data.get_mels()[...,np.newaxis].shape
     o_dim = train_data.get_params().shape
 
+    print(i_dim)
+    print(o_dim)
+
     #make directory to save model if not already made
     if not os.path.isdir("saved_models/"+ sys.argv[1]):
         os.makedirs("saved_models/"+ sys.argv[1])
