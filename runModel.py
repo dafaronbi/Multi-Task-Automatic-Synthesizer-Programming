@@ -9,6 +9,7 @@ import librosa.display
 import matplotlib.pyplot as plt
 import spiegelib
 import sys
+import keras.backend as K
 
 #load data
 print("Loading Data...")
@@ -34,13 +35,22 @@ m.load_weights(latest)
 #compile model
 m.compile(optimizer='adam', loss=losses.MeanSquaredError())
 
-#print evaluation on test set
-loss, loss1,loss2 = m.evaluate(train_data.get_mels(),[train_data.get_mels(),train_data.get_params()])
-print("training model loss = " + str(loss) + "\n training model spectrogram loss = "+ str(loss1) + "\n training model synth_param loss = "+ str(loss2))
+# #print evaluation on test set
+# loss, loss1,loss2 = m.evaluate(train_data.get_mels(),[train_data.get_mels(),train_data.get_params()])
+# print("training model loss = " + str(loss) + "\n training model spectrogram loss = "+ str(loss1) + "\n training model synth_param loss = "+ str(loss2))
 
-#print evaluation on test set
-loss, loss1,loss2 = m.evaluate(test_data.get_mels(),[test_data.get_mels(),test_data.get_params()])
-print("test model loss = " + str(loss) + "\n test model spectrogram loss = "+ str(loss1) + "\n test model synth_param loss = "+ str(loss2))
+# #print evaluation on test set
+# loss, loss1,loss2 = m.evaluate(test_data.get_mels(),[test_data.get_mels(),test_data.get_params()])
+# print("test model loss = " + str(loss) + "\n test model spectrogram loss = "+ str(loss1) + "\n test model synth_param loss = "+ str(loss2))
+
+#evaluate output of multiple layers
+get_all_layer_outputs = K.function([m.layers[0].input], {l.name:l.output  for l in m.layers[1:]})
+
+output_dict = get_all_layer_outputs(test_data.get_mels()[[0]])
+
+for k in output_dict.keys():
+    print(k)
+    print(output_dict[k])
 
 #get 10 random predictiions
 for i in range(10):
