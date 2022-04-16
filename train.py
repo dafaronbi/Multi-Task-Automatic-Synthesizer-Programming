@@ -19,6 +19,11 @@ def main():
     test_data = ds.melParamData("test","data")
     validation_data = ds.melParamData("validation","data")
 
+    #make vst hot encoding
+    vst_hot_train = np.random.rand(1,315,4)
+    vst_hot_test = vst_hot_train
+    vst_hot_valid = vst_hot_train
+
     #make directory to save model if not already made
     if not os.path.isdir("saved_models/"+ sys.argv[1]):
         os.makedirs("saved_models/"+ sys.argv[1])
@@ -50,6 +55,7 @@ def main():
 
     #view summary of model
     m.summary()
+    input()
 
     #compile model
     m.compile(optimizer=model.optimizer, loss=get_loss[sys.argv[1]])
@@ -58,10 +64,10 @@ def main():
     m.optimizer.lr.assign(1e-4)
 
     #train model
-    m.fit([train_data.get_mels()[...,np.newaxis], train_data.get_params()],[train_data.get_mels(),train_data.get_params()], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
+    m.fit([train_data.get_mels()[...,np.newaxis], vst_hot_train],[train_data.get_mels(),train_data.get_params()], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
 
     #print evaluation on test set
-    loss, loss1,loss2 = m.evaluate(test_data.get_mels(),[test_data.get_mels(),test_data.get_params()],2)
+    loss, loss1,loss2 = m.evaluate([test_data.get_mels(),vst_hot_test],[test_data.get_mels(),test_data.get_params()],2)
     print("model loss = " + str(loss) + "\n model spectrogram loss = "+ str(loss1) + "\n model synth_param loss = "+ str(loss2))
 
 if __name__ == "__main__":

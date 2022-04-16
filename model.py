@@ -29,7 +29,7 @@ batches_epoch = i_dim[0] // batch_size
 warmup_it = 100*batches_epoch
 
 #parameter input for dynamic filters
-p_dims = (315,1)
+v_dims = 4
 
 #class for sampling in vae
 class Sampling(layers.Layer):
@@ -222,13 +222,13 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
 
     #set input size
     inp = layers.Input((input_dim[-3],input_dim[-2],1))
-    params_inp = layers.Input((param_dims[0], 1))
+    params_inp = layers.Input((None,param_dims))      
 
     # parameters network
     # TODO: add more layers
     dyn_filts = layers.Activation('relu')(layers.Dense(512,name="dyn_filt_dense")(params_inp))
     dyn_filts = layers.Dense(1024,name="dyn_filt_dense_2")(dyn_filts)
-    dyn_filts = layers.Reshape((1,1024,1,param_dims[0]),name="dyn_filt_reshape")(dyn_filts)
+    dyn_filts = layers.Reshape((1,1024,1,-1),name="dyn_filt_reshape")(dyn_filts)
 
     #convolutional layers and pooling
     encoder = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(inp)))
@@ -354,5 +354,5 @@ def vae_flow(latent_dim,input_dim, output_dim):
 
 
 #dictionary to store models for each cli input
-get_model = {"ae":autoencoder(l_dim,i_dim,o_dim),"ae2": autoencoder2(l_dim,i_dim,o_dim), "ae3": autoencoder3(l_dim,i_dim,o_dim), "vae": vae(l_dim,i_dim,o_dim,optimizer,warmup_it), "dynamic_vae":dynamic_vae(l_dim,i_dim,o_dim,optimizer,warmup_it,p_dims)}#, "vae_flow": vae_flow(l_dim,i_dim,o_dim)}
+get_model = {"ae":autoencoder(l_dim,i_dim,o_dim),"ae2": autoencoder2(l_dim,i_dim,o_dim), "ae3": autoencoder3(l_dim,i_dim,o_dim), "vae": vae(l_dim,i_dim,o_dim,optimizer,warmup_it), "dynamic_vae":dynamic_vae(l_dim,i_dim,o_dim,optimizer,warmup_it,v_dims)}#, "vae_flow": vae_flow(l_dim,i_dim,o_dim)}
 
