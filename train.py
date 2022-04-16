@@ -19,14 +19,6 @@ def main():
     test_data = ds.melParamData("test","data")
     validation_data = ds.melParamData("validation","data")
 
-    #define shapes
-    l_dim = 64
-    i_dim = train_data.get_mels()[...,np.newaxis].shape
-    o_dim = train_data.get_params().shape
-
-    print(i_dim)
-    print(o_dim)
-
     #make directory to save model if not already made
     if not os.path.isdir("saved_models/"+ sys.argv[1]):
         os.makedirs("saved_models/"+ sys.argv[1])
@@ -51,7 +43,7 @@ def main():
         save_freq=save_freq)
 
     #dictionary of losses
-    get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ae3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError(),"vae_flow": losses.MeanSquaredError()}
+    get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ae3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError(),"dynamic_vae": losses.MeanSquaredError(),"vae_flow": losses.MeanSquaredError()}
 
     #create model
     m = model.get_model[sys.argv[1]]
@@ -66,7 +58,7 @@ def main():
     m.optimizer.lr.assign(1e-4)
 
     #train model
-    m.fit(train_data.get_mels()[...,np.newaxis],[train_data.get_mels(),train_data.get_params()], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
+    m.fit([train_data.get_mels()[...,np.newaxis], train_data.get_params()],[train_data.get_mels(),train_data.get_params()], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
 
     #print evaluation on test set
     loss, loss1,loss2 = m.evaluate(test_data.get_mels(),[test_data.get_mels(),test_data.get_params()],2)

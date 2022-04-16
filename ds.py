@@ -15,16 +15,16 @@ class melParamData():
 
         #load in data
         if set_type == "train":
-            self.mels = np.load(dir + "/asp_data_mels.npy")[:25000]
-            self.params = np.load(dir + "/asp_data_params.npy")[:25000]
+            self.mels = np.load(dir + "/serum_mels.npy")[:25000]
+            self.params = np.load(dir + "/serum_params.npy")[:25000]
 
         if set_type == "test":
-            self.mels = np.load(dir + "/asp_data_mels.npy")[25000:27000]
-            self.params = np.load(dir + "/asp_data_params.npy")[25000:27000]
+            self.mels = np.load(dir + "/serum_mels.npy")[25000:27000]
+            self.params = np.load(dir + "/serum_params.npy")[25000:27000]
 
         if set_type == "validation":
-            self.mels = np.load(dir + "/asp_data_mels.npy")[27000:]
-            self.params = np.load(dir + "/asp_data_params.npy")[27000:]
+            self.mels = np.load(dir + "/serum_mels.npy")[27000:]
+            self.params = np.load(dir + "/serum_params.npy")[27000:]
 
         # #delete elements where spectrogram is zero
         # zero_locations = np.where(np.min(self.mels, axis=(1,2))==0.0)[0]
