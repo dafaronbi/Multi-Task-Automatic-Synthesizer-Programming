@@ -222,7 +222,7 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
 
     #set input size
     inp = layers.Input((input_dim[-3],input_dim[-2],1))
-    params_inp = layers.Input((None,param_dims), batch_size=1)      
+    params_inp = layers.Input((None,param_dims), batch_size=batch_size)      
 
     # parameters network
     # TODO: add more layers

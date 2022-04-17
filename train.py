@@ -20,9 +20,9 @@ def main():
     validation_data = ds.melParamData("validation","data")
 
     #make vst hot encoding
-    vst_hot_train = np.random.rand(1,315,4)
-    vst_hot_test = vst_hot_train
-    vst_hot_valid = vst_hot_train
+    vst_hot_train = np.array([np.random.rand(315,4)]*len(train_data))
+    vst_hot_test = np.array([np.random.rand(315,4)]*len(test_data))
+    vst_hot_valid = np.array([np.random.rand(315,4)]*len(validation_data))
 
     #make directory to save model if not already made
     if not os.path.isdir("saved_models/"+ sys.argv[1]):
