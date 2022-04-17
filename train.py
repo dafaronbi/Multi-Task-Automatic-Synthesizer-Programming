@@ -55,7 +55,6 @@ def main():
 
     #view summary of model
     m.summary()
-    input()
 
     #compile model
     m.compile(optimizer=model.optimizer, loss=get_loss[sys.argv[1]])
