@@ -13,11 +13,13 @@ import tensorflow.keras.backend as K
 
 #define shapes
 l_dim = 64
-i_dim = (25000, 128, 431, 1)
-o_dim = (25000, 315)
+i_dim = (1, 128, 431, 1)
+o_dim = (None, 1)
+
+data_size = {"serum": 23325, "tyrell": 18005, "diva": 16237}
 
 #get optimizer
-optimizer = tf.keras.optimizers.Adam() 
+optimizer = tf.keras.optimizers.Adam()
 
 #batch_size
 batch_size = 32
