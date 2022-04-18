@@ -15,20 +15,20 @@ class melParamData():
         self.synth = synth
 
         total_size = len(np.load("data/" + synth + "_params.npy"))
-        total_size_32factor = 32*((total_size)//32)
+        train_size = 32*((total_size - total_size//5) // 32)
 
         #load in data
         if set_type == "train":
-            self.mels = np.load("data/" + synth + "_mels.npy")[:total_size_32factor - total_size_32factor//5]
-            self.params = np.load("data/" + synth + "_params.npy")[:total_size_32factor - total_size_32factor//5]
+            self.mels = np.load("data/" + synth + "_mels.npy")[:train_size]
+            self.params = np.load("data/" + synth + "_params.npy")[:train_size]
 
         if set_type == "test":
-            self.mels = np.load("data/" + synth + "_mels.npy")[total_size_32factor - total_size_32factor//5:total_size_32factor - total_size_32factor//10]
-            self.params = np.load("data/" + synth + "_params.npy")[total_size_32factor - total_size_32factor//5:total_size_32factor - total_size_32factor//10]
+            self.mels = np.load("data/" + synth + "_mels.npy")[total_size - total_size//5:total_size - total_size//10]
+            self.params = np.load("data/" + synth + "_params.npy")[total_size - total_size//5:total_size - total_size//10]
 
         if set_type == "validation":
-            self.mels = np.load("data/" + synth + "_mels.npy")[total_size_32factor - total_size_32factor//10:]
-            self.params = np.load("data/" + synth + "_params.npy")[total_size_32factor - total_size_32factor//10:]
+            self.mels = np.load("data/" + synth + "_mels.npy")[total_size - total_size//10:]
+            self.params = np.load("data/" + synth + "_params.npy")[total_size - total_size//10:]
 
         #set input and output size
         self.input_size = self.mels[0].shape
