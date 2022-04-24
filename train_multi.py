@@ -10,13 +10,13 @@ import sys
 
 def main():
 
-    spec_data = np.load("/vast/df2322/data/all_data_mels.npy",allow_pickle=True)
-    serum_params = np.load("/vast/df2322/data/all_data_serum_params.npy",allow_pickle=True)
-    serum_masks = np.load("/vast/df2322/data/all_data_serum_masks.npy",allow_pickle=True)
-    diva_params = np.load("/vast/df2322/data/all_data_diva_params.npy",allow_pickle=True)
-    diva_masks = np.load("/vast/df2322/data/all_data_diva_masks.npy",allow_pickle=True)
-    tyrell_params = np.load("/vast/df2322/data/all_data_tyrell_params.npy",allow_pickle=True)
-    tyrell_masks = np.load("/vast/df2322/data/all_data_tyrell_masks.npy",allow_pickle=True)
+    spec_data = np.load("/vast/df2322/asp_data/all_data_mels.npy",allow_pickle=True)
+    serum_params = np.load("/vast/df2322/asp_data/all_data_serum_params.npy",allow_pickle=True)
+    serum_masks = np.load("/vast/df2322/asp_data/all_data_serum_masks.npy",allow_pickle=True)
+    diva_params = np.load("/vast/df2322/asp_data/all_data_diva_params.npy",allow_pickle=True)
+    diva_masks = np.load("/vast/df2322/asp_data/all_data_diva_masks.npy",allow_pickle=True)
+    tyrell_params = np.load("/vast/df2322/asp_data/all_data_tyrell_params.npy",allow_pickle=True)
+    tyrell_masks = np.load("/vast/df2322/asp_data/all_data_tyrell_masks.npy",allow_pickle=True)
 
 
     m_size = len(spec_data)
