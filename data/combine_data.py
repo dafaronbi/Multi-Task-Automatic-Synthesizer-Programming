@@ -9,18 +9,23 @@ if __name__ == "__main__":
     diva_p = np.load("diva_params_oh.npy",allow_pickle=True)
     tyrell_p = np.load("tyrell_params_oh.npy",allow_pickle=True)
 
-    final_out = []
+    final_out_spec = []
+    final_out_params = []
 
     for i,spec in enumerate(serum_m):
-        joined = np.array([spec, np.concatenate((serum_p[i],np.zeros(diva_p.shape[-1]),np.zeros(tyrell_p.shape[-1])))])
-        final_out.append(joined)
+        final_out_spec.append(spec)
+        joined = np.array(np.concatenate((serum_p[i],np.zeros(diva_p.shape[-1]),np.zeros(tyrell_p.shape[-1]))))
+        final_out_params.append(joined)
 
     for i,spec in enumerate(diva_m):
-        joined = np.array([spec, np.concatenate((np.zeros(serum_p.shape[-1]),diva_p[i],np.zeros(tyrell_p.shape[-1])))])
-        final_out.append(joined)
+        final_out_spec.append(spec)
+        joined = np.array(np.concatenate((np.zeros(serum_p.shape[-1]),diva_p[i],np.zeros(tyrell_p.shape[-1]))))
+        final_out_params.append(joined)
 
     for i,spec in enumerate(tyrell_m):
-        joined = np.array([spec, np.concatenate((np.zeros(serum_p.shape[-1]),np.zeros(diva_p.shape[-1]),tyrell_p[i]))])
-        final_out.append(joined)
+        final_out_spec.append(spec)
+        joined = np.array(np.concatenate((np.zeros(serum_p.shape[-1]),np.zeros(diva_p.shape[-1]),tyrell_p[i])))
+        final_out_params.append(joined)
 
-    np.save("all_data", np.array(final_out))
+    np.save("all_data_mels", np.array(final_out_spec))
+    np.save("all_data_params", np.array(final_out_params))
