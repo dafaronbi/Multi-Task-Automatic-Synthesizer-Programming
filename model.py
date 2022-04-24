@@ -253,21 +253,21 @@ def vae_multi(latent_dim,input_dim, serum_size, diva_size, tyrell_size, optimize
     decoder_b = layers.Activation('relu')(layers.Dense(1024)(z))
     decoder_b_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_b))
     decoder_b_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_b_h1))
-    decoder_b_out = layers.Dense(serum_size,name='synth_params serum', activation="sigmoid")(decoder_b_h2)
+    decoder_b_out = layers.Dense(serum_size,name='synth_params_serum', activation="sigmoid")(decoder_b_h2)
     decoder_d_out = layers.multiply(decoder_b_out, mask_b)
 
     #decoder layers to synth parameters
     decoder_c = layers.Activation('relu')(layers.Dense(1024)(z))
     decoder_c_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_c))
     decoder_c_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_c_h1))
-    decoder_c_out = layers.Dense(diva_size,name='synth_params diva', activation="sigmoid")(decoder_c_h2)
+    decoder_c_out = layers.Dense(diva_size,name='synth_params_diva', activation="sigmoid")(decoder_c_h2)
     decoder_c_out = layers.multiply(decoder_c_out, mask_c)
 
     #decoder layers to synth parameters
     decoder_d = layers.Activation('relu')(layers.Dense(1024)(z))
     decoder_d_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_d))
     decoder_d_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_d_h1))
-    decoder_d_out = layers.Dense(tyrell_size,name='synth_params tyrell', activation="sigmoid")(decoder_d_h2)
+    decoder_d_out = layers.Dense(tyrell_size,name='synth_params_tyrell', activation="sigmoid")(decoder_d_h2)
     decoder_d_out = layers.multiply(decoder_d_out, mask_d)
 
     #generate model
