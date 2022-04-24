@@ -1,4 +1,5 @@
 #import needed classes
+from ctypes import sizeof
 import numpy as np
 
 class melParamData():
@@ -14,11 +15,12 @@ class melParamData():
         self.synth = synth
 
         total_size = len(np.load("data/" + synth + "_params.npy"))
+        train_size = 32*((total_size - total_size//5) // 32)
 
         #load in data
         if set_type == "train":
-            self.mels = np.load("data/" + synth + "_mels.npy")[:total_size - total_size//5]
-            self.params = np.load("data/" + synth + "_params.npy")[:total_size - total_size//5]
+            self.mels = np.load("data/" + synth + "_mels.npy")[:train_size]
+            self.params = np.load("data/" + synth + "_params.npy")[:train_size]
 
         if set_type == "test":
             self.mels = np.load("data/" + synth + "_mels.npy")[total_size - total_size//5:total_size - total_size//10]

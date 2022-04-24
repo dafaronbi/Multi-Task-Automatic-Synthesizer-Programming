@@ -93,7 +93,10 @@ def main():
         m.fit([train_data.get_mels()[...,np.newaxis]],[train_data.get_mels(),train_data.get_params()], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
 
     #print evaluation on test set
-    loss, loss1,loss2 = m.evaluate([test_data.get_mels(),vst_hot_test],[test_data.get_mels(),test_data.get_params()],2)
+    if sys.argv[1] == "dynamic_vae":
+        loss, loss1,loss2 = m.evaluate([test_data.get_mels(),vst_hot_test],[test_data.get_mels(),test_data.get_params()],2)
+    else:
+        loss, loss1,loss2 = m.evaluate([test_data.get_mels()],[test_data.get_mels(),test_data.get_params()],2)
     print("model loss = " + str(loss) + "\n model spectrogram loss = "+ str(loss1) + "\n model synth_param loss = "+ str(loss2))
 
 if __name__ == "__main__":
