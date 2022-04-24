@@ -18,6 +18,14 @@ def main():
     tyrell_params = np.load("/vast/df2322/asp_data/all_data_tyrell_params.npy",allow_pickle=True)
     tyrell_masks = np.load("/vast/df2322/asp_data/all_data_tyrell_masks.npy",allow_pickle=True)
 
+    print(spec_data.shape)
+    print(serum_params.shape)
+    print(serum_masks.shape)
+    print(diva_params.shape)
+    print(diva_masks.shape)
+    print(tyrell_params.shape)
+    print(tyrell_masks.shape)
+
 
     m_size = len(spec_data)
     print(m_size)
