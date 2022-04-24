@@ -63,9 +63,6 @@ def main():
         save_weights_only=True,
         save_freq=save_freq)
 
-    #dictionary of losses
-    get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ae3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError(),"dynamic_vae": losses.MeanSquaredError(),"vae_flow": losses.MeanSquaredError()}
-
     #create model
     m = model.vae_multi(64, i_dim, serum_params.shape[-1], diva_params.shape[-1], tyrell_params.shape[-1], model.optimizer, warmup_it)
 
@@ -73,7 +70,7 @@ def main():
     m.summary()
 
     #compile model
-    m.compile(optimizer=model.optimizer, loss=get_loss[sys.argv[1]])
+    m.compile(optimizer=model.optimizer, loss=losses.MeanSquaredError())
 
     #update learning rate
     m.optimizer.lr.assign(1e-4)
