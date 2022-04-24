@@ -10,22 +10,44 @@ if __name__ == "__main__":
     tyrell_p = np.load("tyrell_params_oh.npy",allow_pickle=True)
 
     final_out_spec = []
-    final_out_params = []
+    serum_out_params = []
+    serum_mask = []
+    diva_out_params = []
+    diva_mask = []
+    tyrell_out_params = []
+    tyrell_mask = []
 
     for i,spec in enumerate(serum_m):
         final_out_spec.append(spec)
-        joined = np.array(np.concatenate((serum_p[i],np.zeros(diva_p.shape[-1]),np.zeros(tyrell_p.shape[-1]))))
-        final_out_params.append(joined)
+        serum_out_params.append(serum_p[i])
+        serum_mask.append(np.ones_like(serum_p[i]))
+        diva_out_params.append(np.zeros(diva_p.shape[-1]))
+        diva_mask.append(np.zeros(diva_p.shape[-1]))
+        tyrell_out_params.append(np.zeros(tyrell_p.shape[-1]))
+        tyrell_mask.append(np.zeros(tyrell_p.shape[-1]))
 
     for i,spec in enumerate(diva_m):
         final_out_spec.append(spec)
-        joined = np.array(np.concatenate((np.zeros(serum_p.shape[-1]),diva_p[i],np.zeros(tyrell_p.shape[-1]))))
-        final_out_params.append(joined)
+        serum_out_params.append(np.zeros(serum_p.shape[-1]))
+        serum_mask.append(np.zeros(serum_p.shape[-1]))
+        diva_out_params.append(diva_p[i])
+        diva_mask.append(np.ones_like(diva_p[i]))
+        tyrell_out_params.append(np.zeros(tyrell_p.shape[-1]))
+        tyrell_mask.append(np.zeros(tyrell_p.shape[-1]))
 
     for i,spec in enumerate(tyrell_m):
         final_out_spec.append(spec)
-        joined = np.array(np.concatenate((np.zeros(serum_p.shape[-1]),np.zeros(diva_p.shape[-1]),tyrell_p[i])))
-        final_out_params.append(joined)
+        serum_out_params.append(np.zeros(serum_p.shape[-1]))
+        serum_mask.append(np.zeros(serum_p.shape[-1]))
+        diva_out_params.append(np.zeros(diva_p.shape[-1]))
+        diva_mask.append(np.ones_like(np.zeros(diva_p.shape[-1])))
+        tyrell_out_params.append(tyrell_p[i])
+        tyrell_mask.append(np.ones_like(tyrell_p[i]))
 
     np.save("all_data_mels", np.array(final_out_spec))
-    np.save("all_data_params", np.array(final_out_params))
+    np.save("all_data_serum_params", np.array(serum_out_params))
+    np.save("all_data_serum_masks", np.array(serum_mask))
+    np.save("all_data_diva_params", np.array(diva_out_params))
+    np.save("all_data_diva_masks", np.array(diva_mask))
+    np.save("all_data_tyrell_params", np.array(tyrell_out_params))
+    np.save("all_data_tyrell_masks", np.array(tyrell_mask))
