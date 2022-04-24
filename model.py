@@ -210,6 +210,69 @@ def vae(latent_dim,input_dim, output_dim,optimizer,warmup_it):
     #generate model
     return Model(inputs=inp, outputs=[decoder_a_deconv_2, decoder_b_out])
 
+def vae_multi(latent_dim,input_dim, serum_size, diva_size, tyrell_size, optimizer,warmup_it):
+    """
+    autoencoder: Create autoencoder model
+    :param latent_dim (numpy.shape): size of latent dimensions
+    :param input_dim (numpy.shape): size of input dimensions
+    :param output_dim (numpy.shape): size of output dimensions
+    """
+
+    prior = tfp.distributions.Independent(tfp.distributions.Normal(loc=tf.zeros(latent_dim), scale=1), reinterpreted_batch_ndims=1)
+
+    #set input size
+    inp = layers.Input((input_dim[-3],input_dim[-2],1))
+
+    mask_b = layers.Input((None,serum_size), batch_size=batch_size)  
+    mask_c = layers.Input((None,diva_size), batch_size=batch_size)  
+    mask_d = layers.Input((None,tyrell_size), batch_size=batch_size)  
+
+    #convolutional layers and pooling
+    encoder = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(inp)))
+    encoder_pool = layers.MaxPool2D(2,2,"same")(encoder)
+    encoder_conv = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(encoder_pool)))
+    encoder_pool2 = layers.MaxPool2D(2, 2, "same")(encoder_conv)
+
+    #latent dimentions
+    z_flat = layers.Flatten()(encoder_pool2)
+    z_mean = layers.Dense(latent_dim, name="z_mean")(z_flat)
+    z_log_var = layers.Dense(latent_dim, name="z_log_var",)(z_flat)
+    z_regular = tf.keras.layers.Concatenate(activity_regularizer=W_KLDivergenceRegularizer(optimizer.iterations,warmup_it,latent_dim))([z_mean,z_log_var])
+    z = Sampling()([z_mean, z_log_var])
+    # z_dense = layers.Dense(tfp.layers.MultivariateNormalTriL.params_size(latent_dim),activation=None)(z_flat)
+    # z = tfp.layers.MultivariateNormalTriL(latent_dim, activity_regularizer=W_KLDivergenceRegularizer(optimizer.iterations,warmup_it))(z_dense)
+
+
+    #decoder layers to spectrogram
+    decoder_a = layers.Activation('relu')(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z))
+    decoder_a_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_a)
+    decoder_a_deconv= layers.Activation('relu')(layers.Conv2DTranspose(8, 3, 2, "same",output_padding=(1,1))(decoder_a_reverse_flat))
+    decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',activation= "sigmoid",output_padding=(1,0))(decoder_a_deconv)
+
+    #decoder layers to synth parameters
+    decoder_b = layers.Activation('relu')(layers.Dense(1024)(z))
+    decoder_b_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_b))
+    decoder_b_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_b_h1))
+    decoder_b_out = layers.Dense(serum_size,name='synth_params serum', activation="sigmoid")(decoder_b_h2)
+    decoder_d_out = layers.multiply(decoder_b_out, mask_b)
+
+    #decoder layers to synth parameters
+    decoder_c = layers.Activation('relu')(layers.Dense(1024)(z))
+    decoder_c_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_c))
+    decoder_c_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_c_h1))
+    decoder_c_out = layers.Dense(diva_size,name='synth_params diva', activation="sigmoid")(decoder_c_h2)
+    decoder_c_out = layers.multiply(decoder_c_out, mask_c)
+
+    #decoder layers to synth parameters
+    decoder_d = layers.Activation('relu')(layers.Dense(1024)(z))
+    decoder_d_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_d))
+    decoder_d_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_d_h1))
+    decoder_d_out = layers.Dense(tyrell_size,name='synth_params tyrell', activation="sigmoid")(decoder_d_h2)
+    decoder_d_out = layers.multiply(decoder_d_out, mask_d)
+
+    #generate model
+    return Model(inputs=[inp, mask_b, mask_c, mask_d], outputs=[decoder_a_deconv_2, decoder_b_out,decoder_c_out,decoder_d_out])
+
 import dynfilt_layers
 
 def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims):
