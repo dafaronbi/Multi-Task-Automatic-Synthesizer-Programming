@@ -39,9 +39,6 @@ def main():
     physical_devices = tf.config.list_physical_devices('GPU')
     print("Num GPUs:", len(physical_devices))
 
-
-
-    param_dim = train_data.get_params().shape[-1]
     #define shapes
     l_dim = 64
     i_dim = (1, 128, 431, 1)
