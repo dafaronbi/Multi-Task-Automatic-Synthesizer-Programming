@@ -67,7 +67,7 @@ def main():
     get_loss = {"ae": losses.MeanSquaredError(),"ae2": losses.MeanSquaredError(),"ae3" : losses.MeanSquaredError(),"vae": losses.MeanSquaredError(),"dynamic_vae": losses.MeanSquaredError(),"vae_flow": losses.MeanSquaredError()}
 
     #create model
-    m = model.vae_multi(64, i_dim, serum_params.shape[-1], diva_params.shape[-1], tyrell_params.shape[-1], m.optimizer, warmup_it)
+    m = model.vae_multi(64, i_dim, serum_params.shape[-1], diva_params.shape[-1], tyrell_params.shape[-1], model.optimizer, warmup_it)
 
     #view summary of model
     m.summary()
