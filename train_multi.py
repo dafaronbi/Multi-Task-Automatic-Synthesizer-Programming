@@ -119,7 +119,7 @@ def main():
     m.optimizer.lr.assign(1e-4)
 
     #train model
-    m.fit([traiin_spec_data, train_serum_masks, train_diva_masks,train_tyrell_masks],[train_spec_data, train_serum_params, train_diva_params, train_tyrell_params], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
+    m.fit([train_spec_data, train_serum_masks, train_diva_masks,train_tyrell_masks],[train_spec_data, train_serum_params, train_diva_params, train_tyrell_params], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
 
     #print evaluation on test set
     loss, loss1,loss2,loss3,loss4 = m.evaluate([test_spec_data, test_serum_masks,test_diva_masks,test_tyrell_masks],[test_spec_data, test_serum_params,test_diva_params, test_tyrell_params],2)
