@@ -40,7 +40,7 @@ if __name__ == "__main__":
         serum_out_params.append(np.zeros(serum_p.shape[-1]))
         serum_mask.append(np.zeros(serum_p.shape[-1]))
         diva_out_params.append(np.zeros(diva_p.shape[-1]))
-        diva_mask.append(np.ones_like(np.zeros(diva_p.shape[-1])))
+        diva_mask.append(np.zeros(diva_p.shape[-1]))
         tyrell_out_params.append(tyrell_p[i])
         tyrell_mask.append(np.ones_like(tyrell_p[i]))
 
