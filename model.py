@@ -223,7 +223,7 @@ def vae_multi(latent_dim,input_dim, serum_size, diva_size, tyrell_size, optimize
     #set input size
     inp = layers.Input((input_dim[-3],input_dim[-2],1))
 
-    mask_b = layers.Input((None,serum_size), batch_size=batch_size)  
+    mask_b = layers.Input((None,serum_size), batch_size=batch_size)  # no longer needed to declare batch_size
     mask_c = layers.Input((None,diva_size), batch_size=batch_size)  
     mask_d = layers.Input((None,tyrell_size), batch_size=batch_size)  
 
@@ -253,22 +253,22 @@ def vae_multi(latent_dim,input_dim, serum_size, diva_size, tyrell_size, optimize
     decoder_b = layers.Activation('relu')(layers.Dense(1024)(z))
     decoder_b_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_b))
     decoder_b_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_b_h1))
-    decoder_b_out = layers.Dense(serum_size,name='synth_params_serum', activation="sigmoid")(decoder_b_h2)
-    decoder_b_out = layers.Multiply()((decoder_b_out, mask_b))
+    decoder_b_out = layers.Dense(serum_size, name='serum', activation="sigmoid")(decoder_b_h2)
+    decoder_b_out = layers.Multiply(name='synth_params_serum')((decoder_b_out, mask_b))
 
     #decoder layers to synth parameters
     decoder_c = layers.Activation('relu')(layers.Dense(1024)(z))
     decoder_c_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_c))
     decoder_c_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_c_h1))
-    decoder_c_out = layers.Dense(diva_size,name='synth_params_diva', activation="sigmoid")(decoder_c_h2)
-    decoder_c_out = layers.Multiply()((decoder_c_out, mask_c))
+    decoder_c_out = layers.Dense(diva_size, name='diva', activation="sigmoid")(decoder_c_h2)
+    decoder_c_out = layers.Multiply(name='synth_params_diva')((decoder_c_out, mask_c))
 
     #decoder layers to synth parameters
     decoder_d = layers.Activation('relu')(layers.Dense(1024)(z))
     decoder_d_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_d))
     decoder_d_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_d_h1))
-    decoder_d_out = layers.Dense(tyrell_size,name='synth_params_tyrell', activation="sigmoid")(decoder_d_h2)
-    decoder_d_out = layers.Multiply()((decoder_d_out, mask_d))
+    decoder_d_out = layers.Dense(tyrell_size, name='tyrell', activation="sigmoid")(decoder_d_h2)
+    decoder_d_out = layers.Multiply(name='synth_params_tyrell')((decoder_d_out, mask_d))
 
     #generate model
     return Model(inputs=[inp, mask_b, mask_c, mask_d], outputs=[decoder_a_deconv_2, decoder_b_out,decoder_c_out,decoder_d_out])
