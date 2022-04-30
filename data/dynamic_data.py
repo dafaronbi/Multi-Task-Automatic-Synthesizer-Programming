@@ -31,10 +31,6 @@ if __name__ == "__main__":
             all_params.append(batch_param)
             all_kernels.append(batch_kernels)
 
-            # print(np.max(batch_mel))
-            # print(batch_param)
-            # print(len(batch_mel))
-
             #start new batch
             batch_mel = [mels[i]]
             batch_param = [params[i]]
@@ -56,4 +52,14 @@ if __name__ == "__main__":
         batch_param.append(params[i])
         batch_kernels.append(kernels[i])
         past_size = len(params[i])
+
+with open("/vast/df2322/asp_data/dynamic_mels.pkl", 'wb') as handle:
+    pickle.dump(all_mels, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open("/vast/df2322/asp_data/dynamic_params.pkl", 'wb') as handle:
+    pickle.dump(all_params, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open("/vast/df2322/asp_data/dynamic_kernels.pkl", 'wb') as handle:
+    pickle.dump(all_kernels, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 
