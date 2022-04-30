@@ -4,7 +4,7 @@ import pickle
 if __name__ == "__main__":
 
     batch_size = 32
-
+    print("Loading data...")
     with open('/vast/df2322/asp_data/all_data_param_together.pkl', 'rb') as handle:
         params = pickle.load(handle)
 
@@ -12,6 +12,7 @@ if __name__ == "__main__":
         kernels = pickle.load(handle)
 
     mels = np.load("/vast/df2322/asp_data/all_data_mels.npy", allow_pickle=True)
+    print("DONE!!!")
 
     all_mels = []
     all_params = []
@@ -32,7 +33,7 @@ if __name__ == "__main__":
 
             print(batch_mel)
             print(len(batch_mel))
-            
+
             #start new batch
             batch_mel = [mels[i]]
             batch_param = [params[i]]
@@ -46,6 +47,8 @@ if __name__ == "__main__":
             batch_param = [params[i]]
             batch_kernels = [kernels[i]]
             past_size = len(params[i])
+            print("lenght error")
+            print(len(batch_mel))
             continue
         
         batch_mel.append(mels[i])
