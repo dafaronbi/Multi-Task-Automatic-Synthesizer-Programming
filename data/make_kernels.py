@@ -23,16 +23,16 @@ for i in range(length):
 
     if s_mask[i][0] == 1:
         param_kernel.append(serum_kernel)
-        synth_parmeters.append(s_param[i])
+        synth_parameters.append(s_param[i])
 
     
     if d_mask[i][0] == 1:
         param_kernel.append(diva_kernel)
-        synth_parmeters.append(d_param[i])
+        synth_parameters.append(d_param[i])
 
     if t_mask[i][0] == 1:
         param_kernel.append(tyrell_kernel)
-        synth_parmeters.append(t_param[i])
+        synth_parameters.append(t_param[i])
 
 
 with open("/vast/df2322/asp_data/all_data_param_kernels.pkl", 'wb') as handle:
