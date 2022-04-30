@@ -14,7 +14,7 @@ diva_kernel = np.load("diva_kernel.npy", allow_pickle=True)
 tyrell_kernel = np.load("tyrell_kernel.npy", allow_pickle=True)
 
 length = len(s_mask)
-print(l)
+print(length)
 
 param_kernel = []
 synth_parameters = []
