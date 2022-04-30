@@ -31,9 +31,9 @@ if __name__ == "__main__":
             all_params.append(batch_param)
             all_kernels.append(batch_kernels)
 
-            print(np.max(batch_mel))
+            # print(np.max(batch_mel))
             # print(batch_param)
-            print(len(batch_mel))
+            # print(len(batch_mel))
 
             #start new batch
             batch_mel = [mels[i]]
