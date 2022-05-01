@@ -330,7 +330,8 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     
     #generate model
     m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, decoder_h2, decoder_out])
-    m.summary()
+    
+    return m
 
 
 
