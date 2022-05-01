@@ -273,7 +273,7 @@ def vae_multi(latent_dim,input_dim, serum_size, diva_size, tyrell_size, optimize
     #generate model
     return Model(inputs=[inp, mask_b, mask_c, mask_d], outputs=[decoder_a_deconv_2, decoder_b_out,decoder_c_out,decoder_d_out])
 
-import dynfilt_layers
+from dynfilt_layers import Conv2D
 
 def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims):
     """
@@ -323,7 +323,7 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     decoder_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder))
     decoder_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_h1))
     decoder_h2 = layers.Reshape((1,1,1024))(decoder_h2)
-    decoder_out = dyn_Conv2D(padding='VALID')(decoder_h2,W1)
+    decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
     decoder_out = layers.Flatten()(decoder_out)
     decoder_out = layers.Add()((decoder_out,b1))
     decoder_out = layers.Activation('sigmoid')(decoder_out)
