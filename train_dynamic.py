@@ -23,7 +23,7 @@ def main():
 
     m_size = len(mels)
 
-    r_mels,r_params,r_kernels = random.sample(list(zip(mels,params,kernels)), m_size)
+    r_mels,r_params,r_kernels = zip(*random.sample(list(zip(mels,params,kernels)), m_size))
 
     train_mels = r_mels[:m_size - m_size//5]
     train_params = r_params[:m_size - m_size//5]
