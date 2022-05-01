@@ -32,9 +32,9 @@ class SynthDataGenerator(tfk.utils.Sequence):
         for isynth, nbps in enumerate(self.nbatches_per_synth):          
           add += nbps
           if index < add:
-            return isynth, index_modulus
+            return isynth, index_modulo
           else:
-            index_modulus = index - (add - nbps)
+            index_modulo = index - (add - nbps)
             
     def __getitem__(self, index):
         'Generate one batch of data'   
