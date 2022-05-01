@@ -46,7 +46,7 @@ class SynthDataGenerator(tfk.utils.Sequence):
 
     def on_epoch_end(self):
         'Updates indexes after each epoch'
-        self.indexes = np.arange(self.batches_per_epoch)
+        self.indexes = np.arange(self.nbatches_per_epoch)
         
     def __data_generation(self, index, modulus):
         'Generates data containing batch_size samples' # X : (n_samples, ndim)      
