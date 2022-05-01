@@ -24,7 +24,7 @@ class SynthDataGenerator(tfk.utils.Sequence):
 
     def __len__(self):
         'Denotes the number of batches per epoch'
-        return self.batches_per_epoch
+        return self.nbatches_per_epoch
 
     def __get_synth_number_from_index(self, index):
         add = 0
