@@ -52,8 +52,8 @@ class SynthDataGenerator(tfk.utils.Sequence):
         synth_params = self.synth_params[index]
         synth_feats = self.synth_feats[index]
 
-        print(spec.shape)
-        print(synth_params.shape)
-        print(synth_feats.shape)
-        input()
+        # print(spec.shape)
+        # print(synth_params.shape)
+        # print(synth_feats.shape)
+        # input()
         return (spec, synth_feats), (spec, synth_params)
