@@ -37,22 +37,20 @@ class SynthDataGenerator(tfk.utils.Sequence):
             index_modulo = index - (add - nbps)
             
     def __getitem__(self, index):
-        'Generate one batch of data'   
-        synth_number, modulus = self.__get_synth_number_from_index(index)
 
         # Generate data
-        X, y = self.__data_generation(synth_number, modulus)
+        X, y = self.__data_generation(index)
         return X, y
 
     def on_epoch_end(self):
         'Updates indexes after each epoch'
         self.indexes = np.arange(self.nbatches_per_epoch)
         
-    def __data_generation(self, index, modulus):
+    def __data_generation(self, index):
         'Generates data containing batch_size samples' # X : (n_samples, ndim)      
-        spec = self.spectrograms[index][modulus]
-        synth_params = self.synth_params[index][modulus]
-        synth_feats = self.synth_feats[index][modulus]
+        spec = self.spectrograms[index]
+        synth_params = self.synth_params[index]
+        synth_feats = self.synth_feats[index]
 
         print(spec.shape)
         print(synth_params.shape)
