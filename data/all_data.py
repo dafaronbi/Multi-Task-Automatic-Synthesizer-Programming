@@ -48,12 +48,12 @@ class SynthDataGenerator(tfk.utils.Sequence):
         
     def __data_generation(self, index):
         'Generates data containing batch_size samples' # X : (n_samples, ndim)      
-        spec = self.spectrograms[index]
-        synth_params = self.synth_params[index]
-        synth_feats = self.synth_feats[index]
+        spec = np.array(self.spectrograms[index])
+        synth_params = np.array(self.synth_params[index])
+        synth_feats = np.array(self.synth_feats[index])
 
-        print(np.array(spec).shape)
-        print(np.array(synth_params).shape)
-        print(np.array(synth_feats).shape)
+        print(spec.shape)
+        print(synth_params.shape)
+        print(synth_feats.shape)
         input()
         return (spec, synth_feats), (spec, synth_params)
