@@ -315,8 +315,8 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     # supplemental network for dynamic learning
     W1 = layers.Dense(1024)(synth_nn)
     W1 = layers.Reshape((1,1,1024,-1))(W1)
-    # b1 = layers.Dense(1)(synth_nn)
-    # b1 = layers.Flatten()(b1)
+    b1 = layers.Dense(1)(synth_nn)
+    b1 = layers.Flatten()(b1)
     
     # #decoder layers to synth parameters
     # decoder = layers.Activation('relu')(layers.Dense(1024)(z))
@@ -329,7 +329,7 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     # decoder_out = layers.Activation('sigmoid')(decoder_out)
     
     #generate model
-    m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, W1])
+    m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, W1, b1])
 
     return m
 
