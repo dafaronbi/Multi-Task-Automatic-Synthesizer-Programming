@@ -55,5 +55,4 @@ class SynthDataGenerator(tfk.utils.Sequence):
         print(spec.shape)
         print(synth_params.shape)
         print(synth_feats.shape)
-        input()
         return (spec, synth_feats), (spec, synth_params)
