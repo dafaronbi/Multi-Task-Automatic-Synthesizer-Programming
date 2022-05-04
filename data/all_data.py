@@ -52,11 +52,10 @@ class SynthDataGenerator(tfk.utils.Sequence):
         synth_params = np.array(self.synth_params[index])
         synth_feats = np.swapaxes(np.array(self.synth_feats[index]),1,2)[[0]]
 
-        debug_thing = np.zeros((1,1,1,1024,synth_params.shape[-1]))
         debug_bias = np.zeros((1,synth_params.shape[-1]))
         debug_decode = np.zeros((32,1,1,synth_params.shape[-1]))
 
         # print(spec.shape)
         # print(synth_params.shape)
         # print(synth_feats.shape)
-        return (spec, synth_feats), (spec, debug_thing,debug_bias,debug_decode)
+        return (spec, synth_feats), (spec, debug_bias,debug_decode)
