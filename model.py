@@ -289,7 +289,7 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     inp = layers.Input((input_dim[-3],input_dim[-2],1))
     
     # None is the number of parameters per synthesizer
-    synth_nn = layers.Input((None,1024),batch_size=1)  
+    synth_nn = layers.Input((None,1024),batch_size=32)  
     
     #convolutional layers and pooling
     encoder = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(inp)))
