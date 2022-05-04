@@ -329,8 +329,8 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     decoder_out = layers.Activation('sigmoid')(decoder_out)
     
     #generate model
-    m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, decoder_h2, decoder_out])
-    
+    m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, decoder_out])
+
     return m
 
 
