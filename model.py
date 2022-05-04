@@ -323,13 +323,13 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     decoder_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder))
     decoder_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_h1))
     decoder_h2 = layers.Reshape((1,1,1024))(decoder_h2)
-    # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
+    decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
     # decoder_out = layers.Flatten()(decoder_out)
     # decoder_out = layers.Add()((decoder_out,b1))
     # decoder_out = layers.Activation('sigmoid')(decoder_out)
     
     #generate model
-    m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, W1, b1, decoder_h2])
+    m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, W1, b1, decoder_out])
 
     return m
 
