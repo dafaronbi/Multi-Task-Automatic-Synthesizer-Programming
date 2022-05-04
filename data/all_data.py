@@ -52,9 +52,9 @@ class SynthDataGenerator(tfk.utils.Sequence):
         synth_params = np.array(self.synth_params[index])
         synth_feats = np.swapaxes(np.array(self.synth_feats[index]),1,2)
 
-        debug_thing = np.zeros((1,1,1024,synth_params.shape[-1]))
+        debug_thing = np.zeros((32,1,1,1024,synth_params.shape[-1]))
 
         # print(spec.shape)
         # print(synth_params.shape)
         # print(synth_feats.shape)
-        return (spec, synth_feats), (spec, synth_params)
+        return (spec, synth_feats), (spec, debug_thing)
