@@ -289,7 +289,7 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     inp = layers.Input((input_dim[-3],input_dim[-2],1))
     
     # None is the number of parameters per synthesizer
-    synth_nn = layers.Input((None,1024),batch_size=1)  
+    synth_nn = layers.Input((None,1024),batch_size=32)  
     
     #convolutional layers and pooling
     encoder = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(inp)))
@@ -313,23 +313,23 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     #decoder layers to synth parameters
     
     # supplemental network for dynamic learning
-    W1 = layers.Dense(1024)(synth_nn)
-    W1 = layers.Reshape((1,1,1024,-1))(W1)
-    b1 = layers.Dense(1)(synth_nn)
-    b1 = layers.Flatten()(b1)
+    # W1 = layers.Dense(1024)(synth_nn)
+    # W1 = layers.Reshape((1,1,1024,-1))(W1)
+    # b1 = layers.Dense(1)(synth_nn)
+    # b1 = layers.Flatten()(b1)
     
-    #decoder layers to synth parameters
-    decoder = layers.Activation('relu')(layers.Dense(1024)(z))
-    decoder_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder))
-    decoder_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_h1))
-    decoder_h2 = layers.Reshape((1,1,1024))(decoder_h2)
-    decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
-    decoder_out = layers.Flatten()(decoder_out)
-    decoder_out = layers.Add()((decoder_out,b1))
-    decoder_out = layers.Activation('sigmoid')(decoder_out)
+    # #decoder layers to synth parameters
+    # decoder = layers.Activation('relu')(layers.Dense(1024)(z))
+    # decoder_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder))
+    # decoder_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_h1))
+    # decoder_h2 = layers.Reshape((1,1,1024))(decoder_h2)
+    # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
+    # decoder_out = layers.Flatten()(decoder_out)
+    # decoder_out = layers.Add()((decoder_out,b1))
+    # decoder_out = layers.Activation('sigmoid')(decoder_out)
     
     #generate model
-    m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, decoder_out])
+    m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, synth_nn])
 
     return m
 
