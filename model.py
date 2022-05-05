@@ -375,8 +375,8 @@ def dynamic_mlp_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_d
     # supplemental network for dynamic learning
     W1 = layers.Dense(1024 *1024)(synth_nn)
     W1 = layers.Reshape((1024,1,-1))(W1)
-    # b1 = layers.Dense(1024)(synth_nn)
-    # b1 = layers.Flatten()(b1)
+    b1 = layers.Dense(1024)(synth_nn)
+    b1 = layers.Flatten()(b1)
 
     W2 = layers.Dense(1024)(synth_nn)
     W2 = layers.Reshape((1024,1,-1))(W2)
@@ -390,6 +390,10 @@ def dynamic_mlp_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_d
     decoder_h2 = layers.Reshape((1,1024,1))(decoder_h2)
     # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
     decoder_out = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((decoder_h2,W1))
+    decoder_out = layers.Lambda(lambda x: tf.nn.reduce_sum(x, axis=1))(decoder_out)
+    decoder_out = layers.Activation('relu')(layers.Add()((decoder_out,b1)))
+    decoder_out = layers.Permute((2,1))(decoder_out)
+    decoder_out = layers.Reshape((1,1024,1))(decoder_out)
     decoder_out = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((decoder_out,W2))
     # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
     decoder_out = layers.Flatten()(decoder_out)
