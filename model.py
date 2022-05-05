@@ -335,6 +335,71 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
 
     return m
 
+def dynamic_mlp_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims):
+    """
+    autoencoder: Create autoencoder model
+    :param latent_dim (numpy.shape): size of latent dimensions
+    :param input_dim (numpy.shape): size of input dimensions
+    :param output_dim (numpy.shape): size of output dimensions
+    """
+
+    prior = tfp.distributions.Independent(tfp.distributions.Normal(loc=tf.zeros(latent_dim), scale=1), reinterpreted_batch_ndims=1)
+    
+    #set input size
+    inp = layers.Input((input_dim[-3],input_dim[-2],1))
+    
+    # None is the number of parameters per synthesizer
+    synth_nn = layers.Input((None,1024),batch_size=1)  
+    
+    #convolutional layers and pooling
+    encoder = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(inp)))
+    encoder_pool = layers.MaxPool2D(2,2,"same")(encoder)
+    encoder_conv = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(encoder_pool)))
+    encoder_pool2 = layers.MaxPool2D(2, 2, "same")(encoder_conv)
+    
+    #latent dimentions
+    z_flat = layers.Flatten()(encoder_pool2)
+    z_mean = layers.Dense(latent_dim, name="z_mean")(z_flat)
+    z_log_var = layers.Dense(latent_dim, name="z_log_var",)(z_flat)
+    z_regular = tf.keras.layers.Concatenate(activity_regularizer=W_KLDivergenceRegularizer(optimizer.iterations,warmup_it,latent_dim))([z_mean,z_log_var])
+    z = Sampling()([z_mean, z_log_var])
+    
+    #decoder layers to spectrogram
+    decoder_a = layers.Activation('relu')(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z))
+    decoder_a_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_a)
+    decoder_a_deconv= layers.Activation('relu')(layers.Conv2DTranspose(8, 3, 2, "same",output_padding=(1,1))(decoder_a_reverse_flat))
+    decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',activation= "sigmoid",output_padding=(1,0))(decoder_a_deconv)
+    
+    #decoder layers to synth parameters
+    
+    # supplemental network for dynamic learning
+    W1 = layers.Dense(1024 *1024)(synth_nn)
+    W1 = layers.Reshape((-1,1024,1024))(W1)
+    # b1 = layers.Dense(1024)(synth_nn)
+    # b1 = layers.Flatten()(b1)
+
+    W2 = layers.Dense(1024)(synth_nn)
+    W2 = layers.Reshape((1024,1,-1))(W1)
+    b2 = layers.Dense(1)(synth_nn)
+    b2 = layers.Flatten()(b1)
+    
+    # #decoder layers to synth parameters
+    decoder = layers.Activation('relu')(layers.Dense(1024)(z))
+    decoder_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder))
+    decoder_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_h1))
+    decoder_h2 = layers.Reshape((1,1024,1))(decoder_h2)
+    # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
+    decoder_out = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((decoder_h2,W1))
+    decoder_out = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((decoder_out,W2))
+    # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
+    decoder_out = layers.Flatten()(decoder_out)
+    decoder_out = layers.Add()((decoder_out,b2))
+    decoder_out = layers.Activation('sigmoid')(decoder_out)
+    
+    #generate model
+    m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, decoder_out])
+
+    return m
 
 
 def vae_flow(latent_dim,input_dim, output_dim):
