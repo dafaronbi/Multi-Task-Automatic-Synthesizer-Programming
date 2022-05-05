@@ -373,7 +373,7 @@ def dynamic_mlp_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_d
     #decoder layers to synth parameters
     
     # supplemental network for dynamic learning
-    W1 = layers.Dense(1024 *1024)(synth_nn)
+    W1 = layers.Dense(1024 *16)(synth_nn)
     W1 = layers.Reshape((1024,1,-1))(W1)
     b1 = layers.Dense(1024)(synth_nn)
     b1 = layers.Flatten()(b1)
