@@ -374,14 +374,14 @@ def dynamic_mlp_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_d
     
     # supplemental network for dynamic learning
     W1 = layers.Dense(1024 *1024)(synth_nn)
-    W1 = layers.Reshape((-1,1024,1024))(W1)
+    W1 = layers.Reshape((1024,1,-1))(W1)
     # b1 = layers.Dense(1024)(synth_nn)
     # b1 = layers.Flatten()(b1)
 
     W2 = layers.Dense(1024)(synth_nn)
-    W2 = layers.Reshape((1024,1,-1))(W1)
+    W2 = layers.Reshape((1024,1,-1))(W2)
     b2 = layers.Dense(1)(synth_nn)
-    b2 = layers.Flatten()(b1)
+    b2 = layers.Flatten()(b2)
     
     # #decoder layers to synth parameters
     decoder = layers.Activation('relu')(layers.Dense(1024)(z))
