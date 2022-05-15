@@ -21,7 +21,7 @@ def main():
     with open("/vast/df2322/asp_data/random_dynamic_kernels.pkl", 'rb') as handle:
         kernels = pickle.load(handle)
 
-    m_size = len(mels)
+    
 
     r_mels,r_params,r_kernels = zip(*random.sample(list(zip(mels,params,kernels)), m_size))
 
@@ -36,6 +36,8 @@ def main():
     test_mels = r_mels[m_size - m_size//10:]
     test_params = r_params[m_size - m_size//10:]
     test_kernels = r_kernels[m_size - m_size//10:]
+
+    m_size = len(train_mels)
 
     #use synth dataloader
     train_data_load = all_data.SynthDataGenerator(len(train_mels),train_mels,train_params,train_kernels)
@@ -58,7 +60,7 @@ def main():
     batch_size = 32
 
     #number of batches in one epoch
-    batches_epoch = m_size // batch_size
+    batches_epoch = m_size 
 
     print(batches_epoch)
 

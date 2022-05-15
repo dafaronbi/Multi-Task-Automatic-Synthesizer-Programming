@@ -19,8 +19,6 @@ def main():
     tyrell_params = np.load("/vast/df2322/asp_data/all_data_tyrell_params.npy",allow_pickle=True)
     tyrell_masks = np.load("/vast/df2322/asp_data/all_data_tyrell_masks.npy",allow_pickle=True)
 
-    m_size = len(spec_data)
-
     #create splits for training validation and test data
     all_data_indices = np.random.choice(m_size,m_size,replace=False)
     train_indices = all_data_indices[:m_size - m_size//5]
@@ -50,6 +48,8 @@ def main():
     test_diva_masks = diva_masks[test_indices]
     test_tyrell_params = tyrell_params[test_indices]
     test_tyrell_masks = tyrell_masks[test_indices]
+
+    m_size = len(train_spec_data)
 
     np.save("/vast/df2322/asp_data/multi/test_spec",test_spec_data)
     np.save("/vast/df2322/asp_data/multi/test_serum_params",test_serum_params)
