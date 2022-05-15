@@ -19,6 +19,8 @@ def main():
     tyrell_params = np.load("/vast/df2322/asp_data/all_data_tyrell_params.npy",allow_pickle=True)
     tyrell_masks = np.load("/vast/df2322/asp_data/all_data_tyrell_masks.npy",allow_pickle=True)
 
+    m_size = len(spec_data)
+
     #create splits for training validation and test data
     all_data_indices = np.random.choice(m_size,m_size,replace=False)
     train_indices = all_data_indices[:m_size - m_size//5]

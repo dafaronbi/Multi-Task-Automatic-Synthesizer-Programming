@@ -21,7 +21,7 @@ def main():
     with open("/vast/df2322/asp_data/random_dynamic_kernels.pkl", 'rb') as handle:
         kernels = pickle.load(handle)
 
-    
+    m_size = len(mels)
 
     r_mels,r_params,r_kernels = zip(*random.sample(list(zip(mels,params,kernels)), m_size))
 
