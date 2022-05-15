@@ -35,7 +35,7 @@ for i in range(length):
         synth_parameters.append(t_param[i])
 
 
-with open("/vast/df2322/asp_data/all_data_param_kernels.pkl", 'wb') as handle:
+with open("/vast/df2322/asp_data/all_data_param_random_kernels.pkl", 'wb') as handle:
     pickle.dump(param_kernel, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 with open("/vast/df2322/asp_data/all_data_param_together.pkl", 'wb') as handle:
