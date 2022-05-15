@@ -51,13 +51,13 @@ def main():
     test_tyrell_params = tyrell_params[test_indices]
     test_tyrell_masks = tyrell_masks[test_indices]
 
-    np.save("test_spec",test_spec_data)
-    np.save("test_serum_params",test_serum_params)
-    np.save("test_serum_masks",test_serum_masks)
-    np.save("test_diva_params",test_diva_params)
-    np.save("test_diva_masks",test_diva_masks)
-    np.save("test_tyrell_params",test_tyrell_params)
-    np.save("test_tyrell_masks",test_tyrell_masks)
+    np.save("/vast/df2322/asp_data/multi/test_spec",test_spec_data)
+    np.save("/vast/df2322/asp_data/multi/test_serum_params",test_serum_params)
+    np.save("/vast/df2322/asp_data/multi/test_serum_masks",test_serum_masks)
+    np.save("/vast/df2322/asp_data/multi/test_diva_params",test_diva_params)
+    np.save("/vast/df2322/asp_data/multi/test_diva_masks",test_diva_masks)
+    np.save("/vast/df2322/asp_data/multi/test_tyrell_params",test_tyrell_params)
+    np.save("/vast/df2322/asp_data/multi/test_tyrell_masks",test_tyrell_masks)
     
 
 
