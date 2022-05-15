@@ -22,16 +22,16 @@ synth_parameters = []
 for i in range(length):
 
     if s_mask[i][0] == 1:
-        param_kernel.append(serum_kernel)
+        param_kernel.append(np.random.rand(1024,480))
         synth_parameters.append(s_param[i])
 
     
     if d_mask[i][0] == 1:
-        param_kernel.append(diva_kernel)
+        param_kernel.append(np.random.rand(1024,759))
         synth_parameters.append(d_param[i])
 
     if t_mask[i][0] == 1:
-        param_kernel.append(tyrell_kernel)
+        param_kernel.append(np.random.rand(1024,327))
         synth_parameters.append(t_param[i])
 
 

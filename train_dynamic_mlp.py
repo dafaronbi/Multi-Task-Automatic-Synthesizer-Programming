@@ -74,11 +74,11 @@ def main():
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
-    if not os.path.isdir("saved_models/vst_multi"):
-        os.makedirs("saved_models/vst_multi")
+    if not os.path.isdir("saved_models/dynamic_mlp"):
+        os.makedirs("saved_models/dynamic_mlp")
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "saved_models/vst_multi/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "saved_models/dynamic_mlp/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs= 500
