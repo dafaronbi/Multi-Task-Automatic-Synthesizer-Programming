@@ -21,6 +21,8 @@ def main():
     with open("/vast/df2322/asp_data/dynamic_kernels.pkl", 'rb') as handle:
         kernels = pickle.load(handle)
 
+    m_size = len(mels)
+
     r_mels,r_params,r_kernels = zip(*random.sample(list(zip(mels,params,kernels)), m_size))
 
     train_mels = r_mels[:m_size - m_size//5]
