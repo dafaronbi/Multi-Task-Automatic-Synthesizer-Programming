@@ -14,11 +14,11 @@ import pickle
 def main():
 
     #load in data
-    with open("/vast/df2322/asp_data/dynamic_mels.pkl", 'rb') as handle:
+    with open("/vast/df2322/asp_data/random_dynamic_mels.pkl", 'rb') as handle:
         mels = pickle.load(handle)
-    with open("/vast/df2322/asp_data/dynamic_params.pkl", 'rb') as handle:
+    with open("/vast/df2322/asp_data/random_dynamic_params.pkl", 'rb') as handle:
         params = pickle.load(handle)
-    with open("/vast/df2322/asp_data/dynamic_kernels.pkl", 'rb') as handle:
+    with open("/vast/df2322/asp_data/random_dynamic_kernels.pkl", 'rb') as handle:
         kernels = pickle.load(handle)
 
     m_size = len(mels)
@@ -42,13 +42,13 @@ def main():
     valid_data_load = all_data.SynthDataGenerator(len(valid_mels),valid_mels,valid_params,valid_kernels)
     test_data_load = all_data.SynthDataGenerator(len(test_mels),test_mels,test_params,test_kernels)
 
-    with open("/vast/df2322/asp_data/dynamic/test_dynamic_mels.pkl", 'wb') as handle:
+    with open("/vast/df2322/asp_data/dynamic_rand/test_random_dynamic_mels.pkl", 'wb') as handle:
         pickle.dump(test_mels, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    with open("/vast/df2322/asp_data/dynamic/test_dynamic_params.pkl", 'wb') as handle:
+    with open("/vast/df2322/asp_data/dynamic_rand/test_random_dynamic_params.pkl", 'wb') as handle:
         pickle.dump(test_params, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    with open("/vast/df2322/asp_data/dynamic/test_dynamic_kernels.pkl", 'wb') as handle:
+    with open("/vast/df2322/asp_data/dynamic_rand/test_random_dynamic_kernels.pkl", 'wb') as handle:
         pickle.dump(test_kernels, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
     
@@ -74,11 +74,11 @@ def main():
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
-    if not os.path.isdir("saved_models/dynamic"):
-        os.makedirs("saved_models/dynamic")
+    if not os.path.isdir("saved_models/random_dynamic"):
+        os.makedirs("saved_models/random_dynamic")
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "saved_models/dynamic/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "saved_models/random_dynamic/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs= 500
