@@ -375,6 +375,7 @@ def dynamic_mlp_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_d
     synth_mean = layers.Lambda(lambda x: tf.math.reduce_mean(tf.expand_dims(x,-1),axis=1))(synth_nn) # synth_nn [1, nparams, 1024] -> [1,1024,1]
     W1 = layers.Dense(64)(synth_mean) # [1,1024,1] -> [1,1024,64]
     W1 = layers.Permute((2,1))(W1) # [1,1024,64] -> [1, 64, 1024]
+    W1 = layers.Lambda(lambda x: tf.expand_dims(x,2))(W1) # [1, 64, 1024] -> [1, 64, 1, 1024]
     b1 = layers.Dense(64)(synth_mean) # [1,1024,1] -> [1,1024,64]
     b1 = layers.Lambda(lambda x: tf.math.reduce_mean(x,1))(b1)
     b1 = layers.Flatten()(b1)
