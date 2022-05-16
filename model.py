@@ -396,7 +396,7 @@ def dynamic_mlp_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_d
     # #decoder layers to synth parameters
     
     #decoder = layers.Activation('relu')(layers.Dense(1024)(z))
-    decoder = layers.Reshape((1,1024,1))(z)
+    decoder = layers.Reshape((1,64,1))(z)
     decoder = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((z,W1))
     decoder = layers.Flatten()(decoder)
     decoder = layers.Add()((decoder,b1))
