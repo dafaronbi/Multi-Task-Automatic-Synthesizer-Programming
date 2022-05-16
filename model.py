@@ -371,43 +371,64 @@ def dynamic_mlp_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_d
     decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',activation= "sigmoid",output_padding=(1,0))(decoder_a_deconv)
     
     #decoder layers to synth parameters
-    
     # supplemental network for dynamic learning
-    W1 = layers.Dense(1024 *16)(synth_nn)
+    synth_mean = layers.Lambda(lambda x: tf.math.reduce_mean(tf.expand_dims(x,-1),axis=1))(synth_nn) # synth_nn [1, nparams, 1024] -> [1,1024,1]
+    W1 = layers.Dense(1024)(synth_mean) # [1,1024,1] -> [1,1024,1024]
     W1 = layers.Reshape((1024,1,-1))(W1)
-    b1 = layers.Dense(1024)(synth_nn)
+    b1 = layers.Dense(1)(synth_mean) # [1,1024,1] -> [1,1024,1]
     b1 = layers.Flatten()(b1)
 
-    W2 = layers.Dense(1024)(synth_nn)
+    W2 = layers.Dense(1024)(synth_mean) # [1,1024,1] -> [1,1024,1024]
     W2 = layers.Reshape((1024,1,-1))(W2)
-    b2 = layers.Dense(1)(synth_nn)
+    b2 = layers.Dense(1)(synth_mean) # [1,1024,1] -> [1,1024,1]
     b2 = layers.Flatten()(b2)
+
+    W3 = layers.Dense(1024)(synth_mean) # [1,1024,1] -> [1,1024,1024]
+    W3 = layers.Reshape((1024,1,-1))(W3)
+    b3 = layers.Dense(1)(synth_mean) # [1,1024,1] -> [1,1024,1]
+    b3 = layers.Flatten()(b3)
+
+    Wo = layers.Dense(1024)(synth_nn)
+    Wo = layers.Reshape((1024,1,-1))(Wo)
+    bo = layers.Dense(1)(synth_nn)
+    bo = layers.Flatten()(bo)
     
     # #decoder layers to synth parameters
-    decoder = layers.Activation('relu')(layers.Dense(1024)(z))
-    decoder_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder))
-    decoder_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_h1))
-    decoder_h2 = layers.Reshape((1,1024,1))(decoder_h2)
+    
+    #decoder = layers.Activation('relu')(layers.Dense(1024)(z))
+    decoder = layers.Reshape((1,1024,1))(z)
+    decoder = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((z,W1))
+    decoder = layers.Flatten()(decoder)
+    decoder = layers.Add()((decoder,b1))
+    decoder = layers.Activation('relu')(decoder)
+    
+    #decoder_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder))
+    decoder_h1 = layers.Reshape((1,1024,1))(decoder)
+    decoder_h1 = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((decoder_h1,W2))
+    decoder_h1 = layers.Flatten()(decoder_h1)
+    decoder_h1 = layers.Add()((decoder_h1,b2))
+    decoder_h1 = layers.Activation('relu')(decoder_h1)
+
+    #decoder_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_h1))
+    decoder_h2 = layers.Reshape((1,1024,1))(decoder_h1)
+    decoder_h2 = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((decoder_h2,W3))
+    decoder_h2 = layers.Flatten()(decoder_h2)
+    decoder_h2 = layers.Add()((decoder_h2,b3))
+    decoder_h2 = layers.Activation('relu')(decoder_h2)
+
     # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
-    decoder_out = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((decoder_h2,W1))
-    decoder_out = layers.Lambda(lambda x: tf.math.reduce_sum(x, axis=-1))(decoder_out)
-    decoder_out = layers.Activation('relu')(layers.Add()((decoder_out,b1)))
-    # tf.print('pre_perumeute', decoder_out)
-    decoder_out = layers.Permute((2,1))(decoder_out)
-    # tf.print('pre_add', decoder_out)
-    decoder_out = layers.Add()((decoder_out,b1))
-    # tf.print('pre_reshpae', decoder_out)
-    decoder_out = layers.Reshape((1,1024,1))(decoder_out)
-    decoder_out = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((decoder_out,W2))
+    decoder_out = layers.Reshape((1,1024,1))(decoder_h2)
+    decoder_out = layers.Lambda(lambda x: tf.nn.conv2d(x[0],x[1],1,'VALID'))((decoder_out,Wo))
     # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
     decoder_out = layers.Flatten()(decoder_out)
-    decoder_out = layers.Add()((decoder_out,b2))
+    decoder_out = layers.Add()((decoder_out,bo))
     decoder_out = layers.Activation('sigmoid')(decoder_out)
     
     #generate model
     m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, decoder_out])
 
     return m
+    
 
 
 def vae_flow(latent_dim,input_dim, output_dim):
