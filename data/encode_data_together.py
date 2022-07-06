@@ -19,7 +19,7 @@ if __name__ == "__main__":
             encoded = one_hot.encode(p, one_hot.diva_oh)
             params_one_hot.append(encoded)
 
-        if synths[i] == "serum":
+        if synths[i] == "tyrell":
             encoded = one_hot.encode(p, one_hot.tyrell_oh)
             params_one_hot.append(encoded)
 
