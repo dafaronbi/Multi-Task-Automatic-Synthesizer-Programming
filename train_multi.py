@@ -117,7 +117,7 @@ def main():
         save_freq=save_freq)
 
     #create model
-    m = model.vae_multi(64, i_dim, serum_params.shape[-1], diva_params.shape[-1], tyrell_params.shape[-1], model.optimizer, warmup_it)
+    m = model.vae_multi(64, i_dim, train_serum_params.shape[-1], train_diva_params.shape[-1], train_tyrell_params.shape[-1], model.optimizer, warmup_it)
 
     #view summary of model
     m.summary()
