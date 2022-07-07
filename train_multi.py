@@ -10,66 +10,66 @@ import sys
 
 def main():
 
-    #load in data
-    spec_data = np.load("/vast/df2322/asp_data/all_data_mels.npy",allow_pickle=True)
-    serum_params = np.load("/vast/df2322/asp_data/all_data_serum_params.npy",allow_pickle=True)
-    serum_masks = np.load("/vast/df2322/asp_data/all_data_serum_masks.npy",allow_pickle=True)
-    diva_params = np.load("/vast/df2322/asp_data/all_data_diva_params.npy",allow_pickle=True)
-    diva_masks = np.load("/vast/df2322/asp_data/all_data_diva_masks.npy",allow_pickle=True)
-    tyrell_params = np.load("/vast/df2322/asp_data/all_data_tyrell_params.npy",allow_pickle=True)
-    tyrell_masks = np.load("/vast/df2322/asp_data/all_data_tyrell_masks.npy",allow_pickle=True)
+    # #load in data
+    # spec_data = np.load("/vast/df2322/asp_data/all_data_mels.npy",allow_pickle=True)
+    # serum_params = np.load("/vast/df2322/asp_data/all_data_serum_params.npy",allow_pickle=True)
+    # serum_masks = np.load("/vast/df2322/asp_data/all_data_serum_masks.npy",allow_pickle=True)
+    # diva_params = np.load("/vast/df2322/asp_data/all_data_diva_params.npy",allow_pickle=True)
+    # diva_masks = np.load("/vast/df2322/asp_data/all_data_diva_masks.npy",allow_pickle=True)
+    # tyrell_params = np.load("/vast/df2322/asp_data/all_data_tyrell_params.npy",allow_pickle=True)
+    # tyrell_masks = np.load("/vast/df2322/asp_data/all_data_tyrell_masks.npy",allow_pickle=True)
 
-    m_size = len(spec_data)
+    # m_size = len(spec_data)
 
     #create splits for training validation and test data
-    all_data_indices = np.random.choice(m_size,m_size,replace=False)
-    train_indices = all_data_indices[:m_size - m_size//5]
-    valid_indices = all_data_indices[m_size - m_size//5: m_size - m_size//10]
-    test_indices = all_data_indices[m_size - m_size//10:]
+    # all_data_indices = np.random.choice(m_size,m_size,replace=False)
+    # train_indices = all_data_indices[:m_size - m_size//5]
+    # valid_indices = all_data_indices[m_size - m_size//5: m_size - m_size//10]
+    # test_indices = all_data_indices[m_size - m_size//10:]
 
-    train_spec_data = spec_data[train_indices]
-    train_serum_params = serum_params[train_indices]
-    train_serum_masks = serum_masks[train_indices]
-    train_diva_params = diva_params[train_indices]
-    train_diva_masks = diva_masks[train_indices]
-    train_tyrell_params = tyrell_params[train_indices]
-    train_tyrell_masks = tyrell_masks[train_indices]
+    train_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_mels.npy",allow_pickle=True)
+    train_serum_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_serum_params.npy",allow_pickle=True)
+    train_serum_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_serum_mask.npy",allow_pickle=True)
+    train_diva_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_diva_params.npy",allow_pickle=True)
+    train_diva_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_diva_mask.npy",allow_pickle=True)
+    train_tyrell_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_tyrell_params.npy",allow_pickle=True)
+    train_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_tyrell_mask.npy",allow_pickle=True)
 
-    valid_spec_data = spec_data[valid_indices]
-    valid_serum_params = serum_params[valid_indices]
-    valid_serum_masks = serum_masks[valid_indices]
-    valid_diva_params = diva_params[valid_indices]
-    valid_diva_masks = diva_masks[valid_indices]
-    valid_tyrell_params = tyrell_params[valid_indices]
-    valid_tyrell_masks = tyrell_masks[valid_indices]
+    valid_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_mels.npy",allow_pickle=True)
+    valid_serum_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_serum_params.npy",allow_pickle=True)
+    valid_serum_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_serum_mask.npy",allow_pickle=True)
+    valid_diva_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_diva_params.npy",allow_pickle=True)
+    valid_diva_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_diva_mask.npy",allow_pickle=True)
+    valid_tyrell_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_tyrell_params.npy",allow_pickle=True)
+    valid_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_tyrell_mask.npy",allow_pickle=True)
 
-    test_spec_data = spec_data[test_indices]
-    test_serum_params = serum_params[test_indices]
-    test_serum_masks = serum_masks[test_indices]
-    test_diva_params = diva_params[test_indices]
-    test_diva_masks = diva_masks[test_indices]
-    test_tyrell_params = tyrell_params[test_indices]
-    test_tyrell_masks = tyrell_masks[test_indices]
+    test_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_mels.npy",allow_pickle=True)
+    test_serum_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_serum_params.npy",allow_pickle=True)
+    test_serum_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_serum_mask.npy",allow_pickle=True)
+    test_diva_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_diva_params.npy",allow_pickle=True)
+    test_diva_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_diva_mask.npy",allow_pickle=True)
+    test_tyrell_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_tyrell_params.npy",allow_pickle=True)
+    test_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_tyrell_mask.npy",allow_pickle=True)
 
     m_size = len(train_spec_data)
 
-    np.save("/vast/df2322/asp_data/multi/test_spec",test_spec_data)
-    np.save("/vast/df2322/asp_data/multi/test_serum_params",test_serum_params)
-    np.save("/vast/df2322/asp_data/multi/test_serum_masks",test_serum_masks)
-    np.save("/vast/df2322/asp_data/multi/test_diva_params",test_diva_params)
-    np.save("/vast/df2322/asp_data/multi/test_diva_masks",test_diva_masks)
-    np.save("/vast/df2322/asp_data/multi/test_tyrell_params",test_tyrell_params)
-    np.save("/vast/df2322/asp_data/multi/test_tyrell_masks",test_tyrell_masks)
+    # np.save("/vast/df2322/asp_data/multi/test_spec",test_spec_data)
+    # np.save("/vast/df2322/asp_data/multi/test_serum_params",test_serum_params)
+    # np.save("/vast/df2322/asp_data/multi/test_serum_masks",test_serum_masks)
+    # np.save("/vast/df2322/asp_data/multi/test_diva_params",test_diva_params)
+    # np.save("/vast/df2322/asp_data/multi/test_diva_masks",test_diva_masks)
+    # np.save("/vast/df2322/asp_data/multi/test_tyrell_params",test_tyrell_params)
+    # np.save("/vast/df2322/asp_data/multi/test_tyrell_masks",test_tyrell_masks)
     
 
 
-    print(spec_data.shape)
-    print(serum_params.shape)
-    print(serum_masks.shape)
-    print(diva_params.shape)
-    print(diva_masks.shape)
-    print(tyrell_params.shape)
-    print(tyrell_masks.shape)
+    print(train_spec_data.shape)
+    print(train_serum_params.shape)
+    print(train_serum_masks.shape)
+    print(train_diva_params.shape)
+    print(train_diva_masks.shape)
+    print(train_tyrell_params.shape)
+    print(train_tyrell_masks.shape)
 
 
     
