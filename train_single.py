@@ -28,28 +28,16 @@ def main():
     # test_indices = all_data_indices[m_size - m_size//10:]
 
     train_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_mels.npy",allow_pickle=True)
-    train_serum_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_serum_params.npy",allow_pickle=True)
-    train_serum_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_serum_mask.npy",allow_pickle=True)
-    train_diva_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_diva_params.npy",allow_pickle=True)
-    train_diva_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_diva_mask.npy",allow_pickle=True)
-    train_tyrell_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_tyrell_params.npy",allow_pickle=True)
-    train_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_tyrell_mask.npy",allow_pickle=True)
+    train_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_params_single.npy",allow_pickle=True)
+    train_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_mask_single.npy",allow_pickle=True)
 
     valid_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_mels.npy",allow_pickle=True)
-    valid_serum_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_serum_params.npy",allow_pickle=True)
-    valid_serum_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_serum_mask.npy",allow_pickle=True)
-    valid_diva_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_diva_params.npy",allow_pickle=True)
-    valid_diva_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_diva_mask.npy",allow_pickle=True)
-    valid_tyrell_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_tyrell_params.npy",allow_pickle=True)
-    valid_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_tyrell_mask.npy",allow_pickle=True)
+    valid_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_params_single.npy",allow_pickle=True)
+    valid_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_mask_single.npy",allow_pickle=True)
 
     test_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_mels.npy",allow_pickle=True)
-    test_serum_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_serum_params.npy",allow_pickle=True)
-    test_serum_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_serum_mask.npy",allow_pickle=True)
-    test_diva_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_diva_params.npy",allow_pickle=True)
-    test_diva_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_diva_mask.npy",allow_pickle=True)
-    test_tyrell_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_tyrell_params.npy",allow_pickle=True)
-    test_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_tyrell_mask.npy",allow_pickle=True)
+    test_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_params_single.npy",allow_pickle=True)
+    test_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_mask_single.npy",allow_pickle=True)
 
     m_size = len(train_spec_data)
 
@@ -97,11 +85,11 @@ def main():
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
-    if not os.path.isdir("/vast/df2322/asp_data/saved_models/vst_multi"):
-        os.makedirs("/vast/df2322/asp_data/saved_models/vst_multi")
+    if not os.path.isdir("/vast/df2322/asp_data/saved_models/vst_single"):
+        os.makedirs("/vast/df2322/asp_data/saved_models/vst_single")
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "/vast/df2322/asp_data/saved_models/vst_multi/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "/vast/df2322/asp_data/saved_models/vst_single/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs= 500
@@ -117,7 +105,7 @@ def main():
         save_freq=save_freq)
 
     #create model
-    m = model.vae_multi(64, i_dim, train_serum_params.shape[-1], train_diva_params.shape[-1], train_tyrell_params.shape[-1], model.optimizer, warmup_it)
+    m = model.vae_single(64, i_dim, train_params.shape[-1], model.optimizer, warmup_it)
 
     #view summary of model
     m.summary()
@@ -129,10 +117,10 @@ def main():
     m.optimizer.lr.assign(1e-4)
 
     #train model
-    m.fit([train_spec_data, train_serum_masks, train_diva_masks,train_tyrell_masks],[train_spec_data, train_serum_params, train_diva_params, train_tyrell_params], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
+    m.fit([train_spec_data, train_masks],[train_spec_data, train_params], epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
 
     #print evaluation on test set
-    loss, loss1,loss2,loss3,loss4 = m.evaluate([test_spec_data, test_serum_masks,test_diva_masks,test_tyrell_masks],[test_spec_data, test_serum_params,test_diva_params, test_tyrell_params],2)
+    loss, loss1,loss2, = m.evaluate([test_spec_data, test_masks],[test_spec_data, test_params],2)
     print("model loss = " + str(loss) + "\n model spectrogram loss = "+ str(loss1) + "\n model synth_param loss = "+ str(loss2))
 
 if __name__ == "__main__":

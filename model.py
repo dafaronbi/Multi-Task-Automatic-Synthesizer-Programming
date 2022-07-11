@@ -273,6 +273,57 @@ def vae_multi(latent_dim,input_dim, serum_size, diva_size, tyrell_size, optimize
     #generate model
     return Model(inputs=[inp, mask_b, mask_c, mask_d], outputs=[decoder_a_deconv_2, decoder_b_out,decoder_c_out,decoder_d_out])
 
+def vae_single(latent_dim,input_dim, param_size, optimizer,warmup_it):
+    """
+    autoencoder: Create autoencoder model
+    :param latent_dim (numpy.shape): size of latent dimensions
+    :param input_dim (numpy.shape): size of input dimensions
+    :param output_dim (numpy.shape): size of output dimensions
+    """
+
+    prior = tfp.distributions.Independent(tfp.distributions.Normal(loc=tf.zeros(latent_dim), scale=1), reinterpreted_batch_ndims=1)
+
+    #set input size
+    inp = layers.Input((input_dim[-3],input_dim[-2],1))
+
+    mask = layers.Input((None,param_size), batch_size=batch_size)  # no longer needed to declare batch_size
+
+
+    #convolutional layers and pooling
+    encoder = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(inp)))
+    encoder_pool = layers.MaxPool2D(2,2,"same")(encoder)
+    encoder_conv = layers.Activation('relu')(layers.BatchNormalization()(layers.Conv2D(8,3,1,"same")(encoder_pool)))
+    encoder_pool2 = layers.MaxPool2D(2, 2, "same")(encoder_conv)
+
+    #latent dimentions
+    z_flat = layers.Flatten()(encoder_pool2)
+    z_mean = layers.Dense(latent_dim, name="z_mean")(z_flat)
+    z_log_var = layers.Dense(latent_dim, name="z_log_var",)(z_flat)
+    z_regular = tf.keras.layers.Concatenate(activity_regularizer=W_KLDivergenceRegularizer(optimizer.iterations,warmup_it,latent_dim))([z_mean,z_log_var])
+    z = Sampling()([z_mean, z_log_var])
+    # z_dense = layers.Dense(tfp.layers.MultivariateNormalTriL.params_size(latent_dim),activation=None)(z_flat)
+    # z = tfp.layers.MultivariateNormalTriL(latent_dim, activity_regularizer=W_KLDivergenceRegularizer(optimizer.iterations,warmup_it))(z_dense)
+
+
+    #decoder layers to spectrogram
+    decoder_a = layers.Activation('relu')(layers.Dense(encoder_pool2.shape[-3] * encoder_pool2.shape[-2] * encoder_pool2.shape[-1])(z))
+    decoder_a_reverse_flat = layers.Reshape(encoder_pool2.shape[1:])(decoder_a)
+    decoder_a_deconv= layers.Activation('relu')(layers.Conv2DTranspose(8, 3, 2, "same",output_padding=(1,1))(decoder_a_reverse_flat))
+    decoder_a_deconv_2 = layers.Conv2DTranspose(1, 3, 2, "same",name='spectrogram',activation= "sigmoid",output_padding=(1,0))(decoder_a_deconv)
+
+    #layer for processing input mask
+    mask_process = layers.Activation('relu')(layers.Dense(1024)(mask))
+
+    #decoder layers to synth parameters
+    decoder_b = layers.Activation('relu')(layers.Dense(1024)(z,mask_process))
+    decoder_b_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_b))
+    decoder_b_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_b_h1))
+    decoder_b_out = layers.Dense(param_size, name='serum', activation="sigmoid")(decoder_b_h2)
+    decoder_b_out = layers.Multiply(name='synth_params')((decoder_b_out, mask))
+
+    #generate model
+    return Model(inputs=[inp, mask], outputs=[decoder_a_deconv_2, decoder_b_out,])
+
 from dynfilt_layers import Conv2D
 
 def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims):
