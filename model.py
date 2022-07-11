@@ -286,7 +286,7 @@ def vae_single(latent_dim,input_dim, param_size, optimizer,warmup_it):
     #set input size
     inp = layers.Input((input_dim[-3],input_dim[-2],1))
 
-    mask = layers.Input((None,param_size), batch_size=batch_size)  # no longer needed to declare batch_size
+    mask = layers.Input(param_size)  # no longer needed to declare batch_size
 
 
     #convolutional layers and pooling
