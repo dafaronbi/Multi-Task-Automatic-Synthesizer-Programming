@@ -48,16 +48,6 @@ def main():
     # np.save("/vast/df2322/asp_data/multi/test_diva_masks",test_diva_masks)
     # np.save("/vast/df2322/asp_data/multi/test_tyrell_params",test_tyrell_params)
     # np.save("/vast/df2322/asp_data/multi/test_tyrell_masks",test_tyrell_masks)
-    
-
-
-    print(train_spec_data.shape)
-    print(train_serum_params.shape)
-    print(train_serum_masks.shape)
-    print(train_diva_params.shape)
-    print(train_diva_masks.shape)
-    print(train_tyrell_params.shape)
-    print(train_tyrell_masks.shape)
 
 
     
