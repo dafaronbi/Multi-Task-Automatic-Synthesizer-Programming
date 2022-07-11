@@ -315,7 +315,7 @@ def vae_single(latent_dim,input_dim, param_size, optimizer,warmup_it):
     mask_process = layers.Activation('relu')(layers.Dense(1024)(mask))
 
     #decoder layers to synth parameters
-    decoder_b = layers.Activation('relu')(layers.Dense(1024)(z,mask_process))
+    decoder_b = layers.Activation('relu')(layers.Dense(1024)((z,mask_process)))
     decoder_b_h1 = layers.Activation('relu')(layers.Dense(1024)(decoder_b))
     decoder_b_h2 = layers.Activation('relu')(layers.Dense(1024)(decoder_b_h1))
     decoder_b_out = layers.Dense(param_size, name='serum', activation="sigmoid")(decoder_b_h2)
