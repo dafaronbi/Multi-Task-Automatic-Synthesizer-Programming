@@ -56,7 +56,7 @@ def class_acuracy(y_true,y_predict):
 
 def continous_mse(y_true,y_predict):
 
-    oh_code = None
+    oh_code = []
 
     if len(y_true) == 480:
         oh_code = one_hot.serum_oh
