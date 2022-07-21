@@ -6,6 +6,7 @@ import tensorflow as tf
 from tensorflow.keras import losses
 import model
 import sys
+import metrics
 
 
 def main():
@@ -123,7 +124,9 @@ def main():
     m.summary()
 
     #compile model
-    m.compile(optimizer=model.optimizer, loss=losses.MeanSquaredError())
+    m.compile(optimizer=model.optimizer, loss=losses.MeanSquaredError(), metrics={'synth_params_serum': [metrics.class_acuracy, metrics.continous_mse], 
+                                                                                    'synth_params_diva': [metrics.class_acuracy, metrics.continous_mse],
+                                                                                    'synth_params_tyrell': [metrics.class_acuracy, metrics.continous_mse],})
 
     #update learning rate
     m.optimizer.lr.assign(1e-4)
