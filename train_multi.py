@@ -94,7 +94,7 @@ def main():
     print("Num GPUs:", len(physical_devices))
 
     #define shapes
-    l_dim = sys.argv[1]
+    l_dim = int(sys.argv[1])
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
