@@ -94,7 +94,7 @@ def main():
     print("Num GPUs:", len(physical_devices))
 
     #define shapes
-    l_dim = 64
+    l_dim = sys.argv[1]
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
@@ -124,9 +124,7 @@ def main():
     m.summary()
 
     #compile model
-    m.compile(optimizer=model.optimizer, loss=losses.MeanSquaredError(), metrics={'synth_params_serum': [metrics.class_acuracy, metrics.continous_mse], 
-                                                                                    'synth_params_diva': [metrics.class_acuracy, metrics.continous_mse],
-                                                                                    'synth_params_tyrell': [metrics.class_acuracy, metrics.continous_mse],})
+    m.compile(optimizer=model.optimizer, loss=losses.MeanSquaredError())
 
     #update learning rate
     m.optimizer.lr.assign(1e-4)
