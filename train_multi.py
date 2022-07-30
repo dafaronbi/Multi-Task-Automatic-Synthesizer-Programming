@@ -102,7 +102,7 @@ def main():
         os.makedirs("/vast/df2322/asp_data/saved_models/vst_multi_" + str(l_dim))
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "/vast/df2322/asp_data/saved_models/vst_multi/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "/vast/df2322/asp_data/saved_models/vst_multi_" + str(l_dim) + "/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs= 500
