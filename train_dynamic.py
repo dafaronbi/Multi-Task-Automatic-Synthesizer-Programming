@@ -48,8 +48,6 @@ def main():
         if s == "tyrell":
             train_kernels.append(np.full((1024,327),2))
 
-    train_kernels = np.array(train_kernels, dytype=object)
-
     for s in valid_synth:
         if s == "serum":
             valid_kernels.append(np.full((1024,480),0))
@@ -60,8 +58,6 @@ def main():
         if s == "tyrell":
             valid_kernels.append(np.full((1024,327),2))
 
-    valid_kernels = np.array(valid_kernels, dytype=object)
-
     for s in test_synth:
         if s == "serum":
             test_kernels.append(np.full((1024,480),0))
@@ -71,8 +67,6 @@ def main():
 
         if s == "tyrell":
             test_kernels.append(np.full((1024,327),2))
-
-    test_kernels = np.array(test_kernels, dytype=object)
 
     print("here2")
 
