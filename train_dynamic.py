@@ -37,6 +37,7 @@ def main():
     valid_kernels =[]
     test_kernels =[]
 
+    print("here")
     for s in train_synth:
         if s == "serum":
             train_kernels.append(np.full((1024,480),0))
