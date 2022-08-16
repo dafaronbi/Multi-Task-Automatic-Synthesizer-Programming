@@ -74,6 +74,8 @@ def main():
 
     test_kernels = np.array(test_kernels, dytype=object)
 
+    print("here2")
+
     m_size = len(train_spec_data)
     print(m_size)
     split_size = int(m_size/12)
@@ -92,6 +94,8 @@ def main():
     test_mels = np.array(np.split(test_spec_data, split_size, axis=0)) 
     test_params = np.array(np.split(test_parmas, split_size, axis=0)) 
     test_kernels = np.array(np.split(test_kernels, split_size, axis=0))
+
+    print("here3")
 
     m_size = len(train_mels)
 
