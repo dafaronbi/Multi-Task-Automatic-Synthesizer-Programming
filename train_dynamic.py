@@ -47,7 +47,7 @@ def main():
 
         if s == "tyrell":
             train_kernels.append(np.full((1024,327),2))
-
+    print("done")
     for s in valid_synth:
         if s == "serum":
             valid_kernels.append(np.full((1024,480),0))
@@ -57,7 +57,7 @@ def main():
 
         if s == "tyrell":
             valid_kernels.append(np.full((1024,327),2))
-
+    print('done')
     for s in test_synth:
         if s == "serum":
             test_kernels.append(np.full((1024,480),0))
