@@ -13,12 +13,12 @@ class SynthDataGenerator(tfk.utils.Sequence):
         [ [nbatches, [1, nparams, nfeats]], [...], [...] ]
     '''
 
-    def __init__(self, nbatches, spectrograms, synth_params, synth_feats):
+    def __init__(self, nbatches, spectrograms, synth_params):
         'Initialization'
         self.nbatches_per_epoch = nbatches
         self.spectrograms = spectrograms
         self.synth_params = synth_params
-        self.synth_feats = synth_feats
+        # self.synth_feats = synth_feats
         self.nbatches_per_synth = [len(specs) for specs in self.spectrograms]
         self.on_epoch_end()
 
@@ -50,7 +50,19 @@ class SynthDataGenerator(tfk.utils.Sequence):
         'Generates data containing batch_size samples' # X : (n_samples, ndim)      
         spec = np.array(self.spectrograms[index])
         synth_params = np.array(self.synth_params[index])
-        synth_feats = np.swapaxes(np.array(self.synth_feats[index]),1,2)[[0]]
+
+        synth_feats = np.array([])
+
+        if len(self.synth_params[index]) == 480:
+            synth_feats = np.full((480,1024),0)
+
+        if len(self.synth_params[index]) == 759:
+            synth_feats = np.full((759,1024),0)
+
+        if len(self.synth_params[index]) == 327:
+            synth_feats = np.full((1024,759),0)
+
+        # synth_feats = np.swapaxes(np.array(self.synth_feats[index]),1,2)[[0]]
 
         # debug_bias = np.zeros((32,synth_params.shape[-1]))
         # debug_decode = np.zeros((32,1,1,synth_params.shape[-1]))

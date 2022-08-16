@@ -37,38 +37,38 @@ def main():
     valid_kernels =[]
     test_kernels =[]
 
-    print("here")
-    for s in train_synth:
-        if s == "serum":
-            train_kernels.append(np.full((1024,480),0))
+    # print("here")
+    # for s in train_synth:
+    #     if s == "serum":
+    #         train_kernels.append(np.full((1024,480),0))
 
-        if s == "diva":
-            train_kernels.append(np.full((1024,759),1))
+    #     if s == "diva":
+    #         train_kernels.append(np.full((1024,759),1))
 
-        if s == "tyrell":
-            train_kernels.append(np.full((1024,327),2))
-    print("done")
-    for s in valid_synth:
-        if s == "serum":
-            valid_kernels.append(np.full((1024,480),0))
+    #     if s == "tyrell":
+    #         train_kernels.append(np.full((1024,327),2))
+    # print("done")
+    # for s in valid_synth:
+    #     if s == "serum":
+    #         valid_kernels.append(np.full((1024,480),0))
 
-        if s == "diva":
-            valid_kernels.append(np.full((1024,759),1))
+    #     if s == "diva":
+    #         valid_kernels.append(np.full((1024,759),1))
 
-        if s == "tyrell":
-            valid_kernels.append(np.full((1024,327),2))
-    print('done')
-    for s in test_synth:
-        if s == "serum":
-            test_kernels.append(np.full((1024,480),0))
+    #     if s == "tyrell":
+    #         valid_kernels.append(np.full((1024,327),2))
+    # print('done')
+    # for s in test_synth:
+    #     if s == "serum":
+    #         test_kernels.append(np.full((1024,480),0))
 
-        if s == "diva":
-            test_kernels.append(np.full((1024,759),1))
+    #     if s == "diva":
+    #         test_kernels.append(np.full((1024,759),1))
 
-        if s == "tyrell":
-            test_kernels.append(np.full((1024,327),2))
+    #     if s == "tyrell":
+    #         test_kernels.append(np.full((1024,327),2))
 
-    print("here2")
+    # print("here2")
 
     m_size = len(train_spec_data)
     print(m_size)
@@ -79,24 +79,24 @@ def main():
 
     train_mels = np.array(np.split(train_spec_data, split_size, axis=0))          #r_mels[:m_size - m_size//5]
     train_params = np.array(np.split(train_parmas, split_size, axis=0))                                                      #r_params[:m_size - m_size//5]
-    train_kernels = np.array(np.split(train_kernels, split_size, axis=0))                                                    #r_kernels[:m_size - m_size//5]
+    # train_kernels = np.array(np.split(train_kernels, split_size, axis=0))                                                    #r_kernels[:m_size - m_size//5]
 
     valid_mels = np.array(np.split(valid_spec_data, split_size, axis=0)) 
     valid_params = np.array(np.split(valid_parmas, split_size, axis=0)) 
-    valid_kernels = np.array(np.split(valid_kernels, split_size, axis=0))
+    # valid_kernels = np.array(np.split(valid_kernels, split_size, axis=0))
 
     test_mels = np.array(np.split(test_spec_data, split_size, axis=0)) 
     test_params = np.array(np.split(test_parmas, split_size, axis=0)) 
-    test_kernels = np.array(np.split(test_kernels, split_size, axis=0))
+    # test_kernels = np.array(np.split(test_kernels, split_size, axis=0))
 
     print("here3")
 
     m_size = len(train_mels)
 
     #use synth dataloader
-    train_data_load = all_data.SynthDataGenerator(len(train_mels),train_mels,train_params,train_kernels)
-    valid_data_load = all_data.SynthDataGenerator(len(valid_mels),valid_mels,valid_params,valid_kernels)
-    test_data_load = all_data.SynthDataGenerator(len(test_mels),test_mels,test_params,test_kernels)
+    train_data_load = all_data.SynthDataGenerator(len(train_mels),train_mels,train_params)
+    valid_data_load = all_data.SynthDataGenerator(len(valid_mels),valid_mels,valid_params)
+    test_data_load = all_data.SynthDataGenerator(len(test_mels),test_mels,test_params)
 
     # with open("/vast/df2322/asp_data/dynamic/test_dynamic_mels.pkl", 'wb') as handle:
     #     pickle.dump(test_mels, handle, protocol=pickle.HIGHEST_PROTOCOL)
