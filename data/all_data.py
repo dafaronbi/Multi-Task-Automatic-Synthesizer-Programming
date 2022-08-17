@@ -49,13 +49,11 @@ class SynthDataGenerator(tfk.utils.Sequence):
     def __data_generation(self, index):
         'Generates data containing batch_size samples' # X : (n_samples, ndim)    
 
-        print(self.synth_params[index])  
         spec = np.array(self.spectrograms[index])
         synth_params = np.array(list(self.synth_params[index]),dtype=float)
 
         synth_feats = np.array([])
-        print(len(synth_params[0]))
-        input()
+
         if len(synth_params[0]) == 480:
             synth_feats = np.full((12, 480,1024),0)
 
@@ -65,8 +63,7 @@ class SynthDataGenerator(tfk.utils.Sequence):
         if len(synth_params[0]) == 327:
             synth_feats = np.full((12, 1024,759),2)
 
-        print(synth_feats.shape)
-        input()
+
         # synth_feats = np.swapaxes(np.array(self.synth_feats[index]),1,2)[[0]]
 
         # debug_bias = np.zeros((32,synth_params.shape[-1]))
