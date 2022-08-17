@@ -63,6 +63,9 @@ class SynthDataGenerator(tfk.utils.Sequence):
         if len(synth_params[0]) == 327:
             synth_feats = np.full((12,1, 327, 1024),2)
 
+        print(synth_feats.shape)
+        input()
+
 
         # synth_feats = np.swapaxes(np.array(self.synth_feats[index]),1,2)[[0]]
 
