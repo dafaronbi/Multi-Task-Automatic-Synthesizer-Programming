@@ -51,7 +51,7 @@ class SynthDataGenerator(tfk.utils.Sequence):
 
         print(self.synth_params[index])  
         spec = np.array(self.spectrograms[index])
-        synth_params = np.array(self.synth_params[index],dtype=float)
+        synth_params = np.array(list(self.synth_params[index]),dtype=float)
 
         synth_feats = np.array([])
         print(len(synth_params[0]))
