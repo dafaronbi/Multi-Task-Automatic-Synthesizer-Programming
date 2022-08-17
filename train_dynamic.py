@@ -78,15 +78,15 @@ def main():
     # r_mels,r_params,r_kernels = zip(*random.sample(list(zip(mels,params,kernels)), m_size))
 
     train_mels = np.array(np.split(train_spec_data, split_size, axis=0))          #r_mels[:m_size - m_size//5]
-    train_params = np.array(np.split(train_parmas, split_size, axis=0))                                                      #r_params[:m_size - m_size//5]
+    train_params = np.array(np.split(train_params, split_size, axis=0))                                                      #r_params[:m_size - m_size//5]
     # train_kernels = np.array(np.split(train_kernels, split_size, axis=0))                                                    #r_kernels[:m_size - m_size//5]
 
     valid_mels = np.array(np.split(valid_spec_data, split_size, axis=0)) 
-    valid_params = np.array(np.split(valid_parmas, split_size, axis=0)) 
+    valid_params = np.array(np.split(valid_params, split_size, axis=0)) 
     # valid_kernels = np.array(np.split(valid_kernels, split_size, axis=0))
 
     test_mels = np.array(np.split(test_spec_data, split_size, axis=0)) 
-    test_params = np.array(np.split(test_parmas, split_size, axis=0)) 
+    test_params = np.array(np.split(test_params, split_size, axis=0)) 
     # test_kernels = np.array(np.split(test_kernels, split_size, axis=0))
 
     print("here3")
