@@ -55,13 +55,13 @@ class SynthDataGenerator(tfk.utils.Sequence):
         synth_feats = np.array([])
 
         if len(synth_params[0]) == 480:
-            synth_feats = np.full((12, 480, 1, 1024),0)
+            synth_feats = np.full((1, 480,1024),0)
 
         if len(synth_params[0]) == 759:
-            synth_feats = np.full((12, 759, 1, 1024),1)
+            synth_feats = np.full((1, 759,1024),1)
 
         if len(synth_params[0]) == 327:
-            synth_feats = np.full((12, 327,1, 1024),2)
+            synth_feats = np.full((1, 327,1024),2)
 
         print(synth_feats.shape)
         input()
