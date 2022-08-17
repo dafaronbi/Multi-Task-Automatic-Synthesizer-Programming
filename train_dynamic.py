@@ -81,9 +81,19 @@ def main():
     train_params = np.array(np.split(train_params, split_size, axis=0))                                                      #r_params[:m_size - m_size//5]
     # train_kernels = np.array(np.split(train_kernels, split_size, axis=0))                                                    #r_kernels[:m_size - m_size//5]
 
+    m_size = len(valid_spec_data)
+    print(m_size)
+    split_size = int(m_size/12)
+    print(split_size)
+
     valid_mels = np.array(np.split(valid_spec_data, split_size, axis=0)) 
     valid_params = np.array(np.split(valid_params, split_size, axis=0)) 
     # valid_kernels = np.array(np.split(valid_kernels, split_size, axis=0))
+
+    m_size = len(test_spec_data)
+    print(m_size)
+    split_size = int(m_size/12)
+    print(split_size)
 
     test_mels = np.array(np.split(test_spec_data, split_size, axis=0)) 
     test_params = np.array(np.split(test_params, split_size, axis=0)) 
