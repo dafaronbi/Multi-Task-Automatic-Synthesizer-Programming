@@ -47,7 +47,9 @@ class SynthDataGenerator(tfk.utils.Sequence):
         self.indexes = np.arange(self.nbatches_per_epoch)
         
     def __data_generation(self, index):
-        'Generates data containing batch_size samples' # X : (n_samples, ndim)      
+        'Generates data containing batch_size samples' # X : (n_samples, ndim)    
+
+        print(self.synth_params[index])  
         spec = np.array(self.spectrograms[index])
         synth_params = np.array(self.synth_params[index],dtype=float)
 
