@@ -14,48 +14,114 @@ import pickle
 def main():
 
     #load in data
-    with open("/vast/df2322/asp_data/dynamic_mels.pkl", 'rb') as handle:
-        mels = pickle.load(handle)
-    with open("/vast/df2322/asp_data/dynamic_params.pkl", 'rb') as handle:
-        params = pickle.load(handle)
-    with open("/vast/df2322/asp_data/dynamic_kernels.pkl", 'rb') as handle:
-        kernels = pickle.load(handle)
+    # with open("/vast/df2322/asp_data/dynamic_mels.pkl", 'rb') as handle:
+    #     mels = pickle.load(handle)
+    # with open("/vast/df2322/asp_data/dynamic_params.pkl", 'rb') as handle:
+    #     params = pickle.load(handle)
+    # with open("/vast/df2322/asp_data/dynamic_kernels.pkl", 'rb') as handle:
+    #     kernels = pickle.load(handle)
 
-    m_size = len(mels)
+    train_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_mels.npy",allow_pickle=True)
+    train_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_params.npy",allow_pickle=True)
+    train_synth = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_synth.npy",allow_pickle=True)
 
-    r_mels,r_params,r_kernels = zip(*random.sample(list(zip(mels,params,kernels)), m_size))
+    valid_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_mels.npy",allow_pickle=True)
+    valid_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_params.npy",allow_pickle=True)
+    valid_synth = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_synth.npy",allow_pickle=True)
 
-    train_mels = r_mels[:m_size - m_size//5]
-    train_params = r_params[:m_size - m_size//5]
-    train_kernels = r_kernels[:m_size - m_size//5]
+    test_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_mels.npy",allow_pickle=True)
+    test_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_params.npy",allow_pickle=True)
+    test_synth = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_synth.npy",allow_pickle=True)
 
-    valid_mels = r_mels[m_size - m_size//5: m_size - m_size//10]
-    valid_params = r_params[m_size - m_size//5: m_size - m_size//10]
-    valid_kernels = r_kernels[m_size - m_size//5: m_size - m_size//10]
+    train_kernels = []
+    valid_kernels =[]
+    test_kernels =[]
 
-    test_mels = r_mels[m_size - m_size//10:]
-    test_params = r_params[m_size - m_size//10:]
-    test_kernels = r_kernels[m_size - m_size//10:]
+    # print("here")
+    # for s in train_synth:
+    #     if s == "serum":
+    #         train_kernels.append(np.full((1024,480),0))
+
+    #     if s == "diva":
+    #         train_kernels.append(np.full((1024,759),1))
+
+    #     if s == "tyrell":
+    #         train_kernels.append(np.full((1024,327),2))
+    # print("done")
+    # for s in valid_synth:
+    #     if s == "serum":
+    #         valid_kernels.append(np.full((1024,480),0))
+
+    #     if s == "diva":
+    #         valid_kernels.append(np.full((1024,759),1))
+
+    #     if s == "tyrell":
+    #         valid_kernels.append(np.full((1024,327),2))
+    # print('done')
+    # for s in test_synth:
+    #     if s == "serum":
+    #         test_kernels.append(np.full((1024,480),0))
+
+    #     if s == "diva":
+    #         test_kernels.append(np.full((1024,759),1))
+
+    #     if s == "tyrell":
+    #         test_kernels.append(np.full((1024,327),2))
+
+    # print("here2")
+
+    m_size = len(train_spec_data)
+    print(m_size)
+    split_size = int(m_size/12)
+    print(split_size)
+
+    # r_mels,r_params,r_kernels = zip(*random.sample(list(zip(mels,params,kernels)), m_size))
+
+    train_mels = np.array(np.split(train_spec_data, split_size, axis=0))          #r_mels[:m_size - m_size//5]
+    train_params = np.array(np.split(train_params, split_size, axis=0))                                                      #r_params[:m_size - m_size//5]
+    # train_kernels = np.array(np.split(train_kernels, split_size, axis=0))                                                    #r_kernels[:m_size - m_size//5]
+
+    m_size = len(valid_spec_data)
+    print(m_size)
+    split_size = int(m_size/12)
+    print(split_size)
+
+    valid_mels = np.array(np.split(valid_spec_data, split_size, axis=0)) 
+    valid_params = np.array(np.split(valid_params, split_size, axis=0)) 
+    # valid_kernels = np.array(np.split(valid_kernels, split_size, axis=0))
+
+    m_size = len(test_spec_data)
+    print(m_size)
+    split_size = int(m_size/12)
+    print(split_size)
+
+    test_mels = np.array(np.split(test_spec_data, split_size, axis=0)) 
+    test_params = np.array(np.split(test_params, split_size, axis=0)) 
+    # test_kernels = np.array(np.split(test_kernels, split_size, axis=0))
+
+    print("here3")
+
+    m_size = len(train_mels)
 
     #use synth dataloader
-    train_data_load = all_data.SynthDataGenerator(len(train_mels),train_mels,train_params,train_kernels)
-    valid_data_load = all_data.SynthDataGenerator(len(valid_mels),valid_mels,valid_params,valid_kernels)
-    test_data_load = all_data.SynthDataGenerator(len(test_mels),test_mels,test_params,test_kernels)
+    train_data_load = all_data.SynthDataGenerator(len(train_mels),train_mels,train_params)
+    valid_data_load = all_data.SynthDataGenerator(len(valid_mels),valid_mels,valid_params)
+    test_data_load = all_data.SynthDataGenerator(len(test_mels),test_mels,test_params)
 
-    with open("/vast/df2322/asp_data/dynamic_mlp/test_dynamic_mels.pkl", 'wb') as handle:
-        pickle.dump(test_mels, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    # with open("/vast/df2322/asp_data/dynamic/test_dynamic_mels.pkl", 'wb') as handle:
+    #     pickle.dump(test_mels, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    with open("/vast/df2322/asp_data/dynamic_mlp/test_dynamic_params.pkl", 'wb') as handle:
-        pickle.dump(test_params, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    # with open("/vast/df2322/asp_data/dynamic/test_dynamic_params.pkl", 'wb') as handle:
+    #     pickle.dump(test_params, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    with open("/vast/df2322/asp_data/dynamic_mlp/test_dynamic_kernels.pkl", 'wb') as handle:
-        pickle.dump(test_kernels, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    # with open("/vast/df2322/asp_data/dynamic/test_dynamic_kernels.pkl", 'wb') as handle:
+    #     pickle.dump(test_kernels, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
     
     print(m_size)
 
     #batch_size
-    batch_size = 32
+    batch_size = 12
 
     #number of batches in one epoch
     batches_epoch = m_size // batch_size
@@ -74,11 +140,11 @@ def main():
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
-    if not os.path.isdir("saved_models/dynamic_mlp"):
-        os.makedirs("saved_models/dynamic_mlp")
+    if not os.path.isdir("/vast/df2322/asp_data/saved_models/dynamic_mlp"):
+        os.makedirs("/vast/df2322/asp_data/saved_models/dynamic_mlp")
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "saved_models/dynamic_mlp/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "/vast/df2322/asp_data/saved_models/dynamic_mlp/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs= 500

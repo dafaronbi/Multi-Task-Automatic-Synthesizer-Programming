@@ -140,11 +140,11 @@ def main():
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
-    if not os.path.isdir("saved_models/dynamic"):
-        os.makedirs("saved_models/dynamic")
+    if not os.path.isdir("/vast/df2322/asp_data/saved_models/dynamic"):
+        os.makedirs("/vast/df2322/asp_data/saved_models/dynamic")
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "saved_models/dynamic/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "/vast/df2322/asp_data/saved_models/dynamic/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs= 500
