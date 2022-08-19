@@ -380,7 +380,7 @@ def dynamic_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_dims)
     # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
     decoder_out = layers.Flatten()(decoder_out)
     decoder_out = layers.Add()((decoder_out,b1))
-    decoder_out = layers.Activation('sigmoid')(decoder_out)
+    decoder_out = layers.Activation('sigmoid',name='synth_params')(decoder_out)
     
     #generate model
     m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, decoder_out])
@@ -475,7 +475,7 @@ def dynamic_mlp_vae(latent_dim,input_dim, output_dim,optimizer,warmup_it,param_d
     # decoder_out = Conv2D(padding='VALID')(decoder_h2,W1)
     decoder_out = layers.Flatten()(decoder_out)
     decoder_out = layers.Add()((decoder_out,bo))
-    decoder_out = layers.Activation('sigmoid')(decoder_out)
+    decoder_out = layers.Activation('sigmoid', name='synth_params')(decoder_out)
     
     #generate model
     m = Model(inputs=[inp, synth_nn], outputs=[decoder_a_deconv_2, decoder_out])
