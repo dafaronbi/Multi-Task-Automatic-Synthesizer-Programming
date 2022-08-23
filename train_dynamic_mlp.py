@@ -169,7 +169,7 @@ def main():
     m.compile(optimizer=model.optimizer, loss=losses.MeanSquaredError())
 
     #update learning rate
-    m.optimizer.lr.assign(1e-4)
+    m.optimizer.lr.assign(1e-5)
 
     #train model
     m.fit(train_data_load, epochs=epochs, batch_size=batch_size, callbacks=[cp_callback])
