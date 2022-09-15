@@ -38,8 +38,6 @@ def main():
     test_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_tyrell_mask.npy",allow_pickle=True)
     test_synth  = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_synth.npy",allow_pickle=True)
 
-    m_size = len(train_spec_data)
-
     # np.save("/vast/df2322/asp_data/multi/test_spec",test_spec_data)
     # np.save("/vast/df2322/asp_data/multi/test_serum_params",test_serum_params)
     # np.save("/vast/df2322/asp_data/multi/test_serum_masks",test_serum_masks)
@@ -58,6 +56,8 @@ def main():
     valid_params = valid_serum_params[valid_index]
     test_spec_data = test_spec_data[test_index]
     test_params = test_serum_params[test_index]
+
+    m_size = len(train_spec_data)
 
 
     
