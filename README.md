@@ -1,8 +1,5 @@
-# Automatic-Synthesizer-Programming
-An attempt to implement self-supervised approach to automatic synthesizer programming.
+# Multi VST Automatic-Synthesizer-Programming
+This is the code for the multi VST automatic synthesizer programming project.
 
-Current goals:
+Please send an email to danielfaronbi@nyu.edu if you have any questions about how it works.
 
-- [ ] Select 3 free synthesizers to train the model
-- [ ] Test Spiege Lib
-- [ ] Try to understand how to project the synth parameters to a generalized latent space (pool like parameters)
