@@ -27,6 +27,7 @@ fxp_files = getListOfFiles(data_folder)
 
 #array to store all parameters
 all_data = list()
+preset_name = list()
 
  #create renderman engine with plugin loaded
 engine = dd.RenderEngine(44100, 512)
@@ -39,6 +40,7 @@ for fxp_file in fxp_files:
     size = synth.get_plugin_parameter_size()
 
     synth.load_preset(fxp_file)
+    preset_name.append(fxp_file.split('/')[-1])
 
     #array containing parameters of current preset
     params = list()
@@ -51,3 +53,4 @@ for fxp_file in fxp_files:
     all_data.append(params)
 
 np.save("serum_params",np.array(all_data))
+np.save("serum_preset_name", np.array(preset_name))

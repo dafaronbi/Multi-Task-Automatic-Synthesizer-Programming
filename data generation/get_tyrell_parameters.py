@@ -28,6 +28,7 @@ fxb_files = getListOfFiles(data_folder)
 
 #array to store all parameters
 all_data = list()
+preset_name = list()
 
 
  #create renderman engine with plugin loaded
@@ -41,6 +42,7 @@ for fxb_file in fxb_files:
     size = synth.get_plugin_parameter_size()
 
     synth.load_preset(fxb_file)
+    preset_name.append(fxb_file.split('/')[-1])
 
     #array containing parameters of current preset
     params = list()
@@ -53,3 +55,4 @@ for fxb_file in fxb_files:
     all_data.append(params)
 
 np.save("tyrell_params",np.array(all_data))
+np.save("tyrell_preset_name", np.array(preset_name))

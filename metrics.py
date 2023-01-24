@@ -1,6 +1,21 @@
 import numpy as np
 from data import one_hot
 
+def lsd(labels, logits):
+    "" "labels and Logits are one-dimensional data (seq_len,)" ""
+    labels_spectrogram = librosa.stft(labels, n_fft=2048)  # (1 + n_fft/2, n_frames)
+    logits_spectrogram = librosa.stft(logits, n_fft=2048)  # (1 + n_fft/2, n_frames)
+ 
+    labels_log = np.log10(np.abs(labels_spectrogram) ** 2)
+    logits_log = np.log10(np.abs(logits_spectrogram) ** 2)
+    #Process frequency dimension first
+    lsd = np.mean(np.sqrt(np.mean((labels_log - logits_log) ** 2, axis=0)))
+ 
+    return lsd
+
+def frobenius_norm(y_true, y_predict):
+    return np.abs(np.linalg.norm(y_true.flatten()) - np.linalg.norm(y_predict.flatten()))
+
 def predict_decode(params,synth):
 
     if synth == "serum":
