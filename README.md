@@ -1,6 +1,8 @@
 # Multi Task Automatic-Synthesizer-Programming
 This is the code for the multi VST automatic synthesizer programming project. this software was use in the 2023 ICASSP paper **Exploring Approaches to Multi-Task Automatic Synthesizer Programming**.
 
+![Multi-Task ASP Diagram](asp-main-diagram.png)
+
 ## File Structure
 
 The `data` folder contains scripts for generating data and encoding data to proper format
