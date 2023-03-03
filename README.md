@@ -49,7 +49,7 @@ For all models you can change the location of the data with
 
 `python <train_script.py -d <data directory>`
 
-##Issues
+## Issues
 
 Please send an email to danielfaronbi@nyu.edu if you have any questions about how it works.
 
