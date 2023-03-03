@@ -1,5 +1,8 @@
 import numpy as np
 from data import one_hot
+import os
+
+os.chdir("..")
 
 def lsd(labels, logits):
     "" "labels and Logits are one-dimensional data (seq_len,)" ""
