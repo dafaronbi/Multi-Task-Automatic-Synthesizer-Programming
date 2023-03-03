@@ -1,42 +1,45 @@
 #import needed modules
 import numpy as np
-import ds
 import os
 import tensorflow as tf
 from tensorflow.keras import losses
 import model
 import sys
-import metrics
+import Experiments.metrics as metrics
+import argparse
 
+parser = argparse.ArgumentParser(description='Training parameters')
+parser.add_argument('--data-dir', '-d', dest='data_dir', default='npy_data',
+                    help='Directory for traing, test, and validation data')
+parser.add_argument('--latent-size', '-l', dest='latent_size', type=int, default=64,
+                    help='Latent dimmension size')
+args = parser.parse_args()
 
 def main():
 
-    train_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_mels.npy",allow_pickle=True)
-    train_serum_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_serum_params.npy",allow_pickle=True)
-    train_serum_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_serum_mask.npy",allow_pickle=True)
-    train_diva_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_diva_params.npy",allow_pickle=True)
-    train_diva_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_diva_mask.npy",allow_pickle=True)
-    train_tyrell_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_tyrell_params.npy",allow_pickle=True)
-    train_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_tyrell_mask.npy",allow_pickle=True)
-    train_synth  = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_synth.npy",allow_pickle=True)
+    train_spec_data = np.load(args.data_dir + "/train_mels.npy",allow_pickle=True)
+    train_serum_params = np.load(args.data_dir + "/train_serum_params.npy",allow_pickle=True)
+    train_serum_masks = np.load(args.data_dir + "/train_serum_mask.npy",allow_pickle=True)
+    train_diva_params = np.load(args.data_dir + "/train_diva_params.npy",allow_pickle=True)
+    train_diva_masks = np.load(args.data_dir + "/train_diva_mask.npy",allow_pickle=True)
+    train_tyrell_params = np.load(args.data_dir + "/train_tyrell_params.npy",allow_pickle=True)
+    train_tyrell_masks = np.load(args.data_dir + "/train_tyrell_mask.npy",allow_pickle=True)
 
-    valid_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_mels.npy",allow_pickle=True)
-    valid_serum_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_serum_params.npy",allow_pickle=True)
-    valid_serum_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_serum_mask.npy",allow_pickle=True)
-    valid_diva_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_diva_params.npy",allow_pickle=True)
-    valid_diva_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_diva_mask.npy",allow_pickle=True)
-    valid_tyrell_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_tyrell_params.npy",allow_pickle=True)
-    valid_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_tyrell_mask.npy",allow_pickle=True)
-    valid_synth  = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_synth.npy",allow_pickle=True)
+    valid_spec_data = np.load(args.data_dir + "/valid_mels.npy",allow_pickle=True)
+    valid_serum_params = np.load(args.data_dir + "/valid_serum_params.npy",allow_pickle=True)
+    valid_serum_masks = np.load(args.data_dir + "/valid_serum_mask.npy",allow_pickle=True)
+    valid_diva_params = np.load(args.data_dir + "/valid_diva_params.npy",allow_pickle=True)
+    valid_diva_masks = np.load(args.data_dir + "/valid_diva_mask.npy",allow_pickle=True)
+    valid_tyrell_params = np.load(args.data_dir + "/valid_tyrell_params.npy",allow_pickle=True)
+    valid_tyrell_masks = np.load(args.data_dir + "/valid_tyrell_mask.npy",allow_pickle=True)
 
-    test_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_mels.npy",allow_pickle=True)
-    test_serum_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_serum_params.npy",allow_pickle=True)
-    test_serum_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_serum_mask.npy",allow_pickle=True)
-    test_diva_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_diva_params.npy",allow_pickle=True)
-    test_diva_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_diva_mask.npy",allow_pickle=True)
-    test_tyrell_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_tyrell_params.npy",allow_pickle=True)
-    test_tyrell_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_tyrell_mask.npy",allow_pickle=True)
-    test_synth  = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_synth.npy",allow_pickle=True)
+    test_spec_data = np.load(args.data_dir + "/test_mels.npy",allow_pickle=True)
+    test_serum_params = np.load(args.data_dir + "/test_serum_params.npy",allow_pickle=True)
+    test_serum_masks = np.load(args.data_dir + "/test_serum_mask.npy",allow_pickle=True)
+    test_diva_params = np.load(args.data_dir + "/test_diva_params.npy",allow_pickle=True)
+    test_diva_masks = np.load(args.data_dir + "/test_diva_mask.npy",allow_pickle=True)
+    test_tyrell_params = np.load(args.data_dir + "/test_tyrell_params.npy",allow_pickle=True)
+    test_tyrell_masks = np.load(args.data_dir + "/test_tyrell_mask.npy",allow_pickle=True)
 
     # np.save("/vast/df2322/asp_data/multi/test_spec",test_spec_data)
     # np.save("/vast/df2322/asp_data/multi/test_serum_params",test_serum_params)
@@ -82,11 +85,11 @@ def main():
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
-    if not os.path.isdir("/vast/df2322/asp_data/saved_models/vst_diva"):
-        os.makedirs("/vast/df2322/asp_data/saved_models/vst_diva")
+    if not os.path.isdir("saved_models/vst_diva"):
+        os.makedirs("saved_models/vst_diva")
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "/vast/df2322/asp_data/saved_models/vst_diva/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "saved_models/vst_diva/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs= 500

@@ -1,12 +1,18 @@
 #import needed modules
 import numpy as np
-import ds
 import os
 import tensorflow as tf
 from tensorflow.keras import losses
 import model
 import sys
+import argparse
 
+parser = argparse.ArgumentParser(description='Training parameters')
+parser.add_argument('--data-dir', '-d', dest='data_dir', default='npy_data',
+                    help='Directory for traing, test, and validation data')
+parser.add_argument('--latent-size', '-l', dest='latent_size', type=int, default=64,
+                    help='Latent dimmension size')
+args = parser.parse_args()
 
 def main():
 
@@ -27,17 +33,17 @@ def main():
     # valid_indices = all_data_indices[m_size - m_size//5: m_size - m_size//10]
     # test_indices = all_data_indices[m_size - m_size//10:]
 
-    train_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_mels.npy",allow_pickle=True)
-    train_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_params_single.npy",allow_pickle=True)
-    train_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/train_mask_single.npy",allow_pickle=True)
+    train_spec_data = np.load(args.data_dir + "/train_mels.npy", allow_pickle=True)
+    train_params = np.load(args.data_dir + "/train_params_single.npy", allow_pickle=True)
+    train_masks = np.load(args.data_dir + "/train_mask_single.npy", allow_pickle=True)
 
-    valid_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_mels.npy",allow_pickle=True)
-    valid_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_params_single.npy",allow_pickle=True)
-    valid_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/valid_mask_single.npy",allow_pickle=True)
+    valid_spec_data = np.load(args.data_dir + "/valid_mels.npy", allow_pickle=True)
+    valid_params = np.load(args.data_dir + "/valid_params_single.npy", allow_pickle=True)
+    valid_masks = np.load(args.data_dir + "/valid_mask_single.npy", allow_pickle=True)
 
-    test_spec_data = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_mels.npy",allow_pickle=True)
-    test_params = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_params_single.npy",allow_pickle=True)
-    test_masks = np.load("/vast/df2322/asp_data/fixed_data/expanded/test_mask_single.npy",allow_pickle=True)
+    test_spec_data = np.load(args.data_dir + "/test_mels.npy", allow_pickle=True)
+    test_params = np.load(args.data_dir + "/test_params_single.npy", allow_pickle=True)
+    test_masks = np.load(args.data_dir + "/test_mask_single.npy", allow_pickle=True)
 
     m_size = len(train_spec_data)
 
@@ -75,11 +81,11 @@ def main():
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
-    if not os.path.isdir("/vast/df2322/asp_data/saved_models/vst_single"):
-        os.makedirs("/vast/df2322/asp_data/saved_models/vst_single")
+    if not os.path.isdir("saved_models/vst_single"):
+        os.makedirs("saved_models/vst_single")
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "/vast/df2322/asp_data/saved_models/vst_single/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "saved_models/vst_single/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs= 500
