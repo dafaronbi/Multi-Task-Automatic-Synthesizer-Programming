@@ -1,4 +1,4 @@
-# Experiments
+# Data
 This folder contains scripts to used to augment data for a variety of experiments or training the model.
 
 Many of these scripts will not run properly on a separate computer. However, they give you a good idea of how the data was generated for this project.
