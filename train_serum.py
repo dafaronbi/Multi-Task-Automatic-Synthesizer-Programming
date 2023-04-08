@@ -87,11 +87,11 @@ def main():
     i_dim = (1, 128, 431, 1)
 
     #make directory to save model if not already made
-    if not os.path.isdir("saved_models/vst_serum"):
-        os.makedirs("saved_models/vst_serum")
+    if not os.path.isdir("saved_models/vae_serum"):
+        os.makedirs("saved_models/vae_serum")
 
     # Include the epoch in the file name (uses `str.format`)
-    checkpoint_path = "saved_models/vst_serum/cp-{epoch:04d}.ckpt"
+    checkpoint_path = "saved_models/vae_serum/cp-{epoch:04d}.ckpt"
 
     #epoch size
     epochs= 500
