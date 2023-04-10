@@ -65,7 +65,7 @@ This will select a random index in the test set stored in `npy_data`, runs the s
 
 `python run_inference.py -md <model_dir> -dd <data_dir> -m <model> -s <sample> -l <latent_size>`
 
-where `<model_dir>` is the directory for trained models (default is "saved_odels),
+where `<model_dir>` is the directory for trained models (default is "saved_models),
 
 `<data_dir>` is the directory for npy data used to read the test set (default is "npy_data"),
 
