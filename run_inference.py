@@ -18,14 +18,16 @@ from sklearn.cluster import KMeans
 import argparse
 
 parser = argparse.ArgumentParser(description='Training parameters')
-parser.add_argument('--data-dir', '-d', dest='data_dir', default='npy_data',
+parser.add_argument('--model-dir', '-md', dest='model_dir', default='saved_models',
+                    help='Directory for saved models')
+parser.add_argument('--data-dir', '-dd', dest='data_dir', default='npy_data',
                     help='Directory for test data')
 parser.add_argument('--model', '-m', dest='model', default='multi',
                     help='Model to use to run inferenc. select from [multi, single, serum, diva, tyrell]')
 parser.add_argument('--sample', '-s', dest='sample', type=int, default=-1,
                     help='Specific sample number to test')
 parser.add_argument('--latent-size', '-l', dest='latent_size', type=int, default=64,
-                    help='Latent dimmension size')
+                    help='Latent dimmension size of multi decoder model')
 args = parser.parse_args()
 
 #sample rate for geneating audio
@@ -162,9 +164,9 @@ if args.sample == -1:
 
 #directory for finding checkpoints
 if args.model == "multi":
-    checkpoint_path = "saved_models/" + "vae_" + args.model + "_" + str(args.latent_size)
+    checkpoint_path = args.model_dir + "/vae_" + args.model + "_" + str(args.latent_size)
 else:
-    checkpoint_path = "saved_models/" + "vae_" + args.model
+    checkpoint_path = args.model_dir + "/vae_" + args.model
 
 print(checkpoint_path)
 

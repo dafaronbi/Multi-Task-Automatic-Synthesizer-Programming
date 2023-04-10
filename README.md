@@ -37,6 +37,8 @@ Train one of the models
 
 `python train_multi.py`
 
+`python train_single.py`
+
 `python train_serum.py`
 
 `python train_diva.py`
@@ -49,7 +51,29 @@ For the multi-vst model you can change the latent space size with
 
 For all models you can change the location of the data with
 
-`python <train_script.py -d <data directory>`
+`python <train_script.py> -d <data directory>`
+
+## Running inference on a saved model
+
+To run a model, you must have models trained and saved in the folder `saved_models`. If you trained all models, these will be `vae_multi_<l>` where `<l>` is the latent size, vae_single, vae_serum, vae_diva, and vae_tyrell in the `saved_models` folder.
+
+To run inference, use the script
+
+`python run_inference.py`
+
+This will select a random index in the test set stored in `npy_data`, runs the spectrogram through the multi-decoder model, and generates audio using the ground truth parameter and the infered parameters. You can change parameters for the inference by running
+
+`python run_inference.py -md <model_dir> -dd <data_dir> -m <model> -s <sample> -l <latent_size>`
+
+where `<model_dir>` is the directory for trained models (default is "saved_odels),
+
+`<data_dir>` is the directory for npy data used to read the test set (default is "npy_data"),
+
+`<model>` is the model used for inference out of [multi, single, serum, diva, tyrell] (default is "multi"),
+
+`<sample>` is the integer index of the test set to be selected (default is -1. This means a random sample will be selected),
+
+and `<latent_size>` is the integer size of the latent dimmension if the multi-decoder model is selected
 
 ## Issues
 
