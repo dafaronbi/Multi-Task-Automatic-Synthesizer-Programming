@@ -63,7 +63,7 @@ To run inference, use the script
 
 This will select a random index in the test set stored in `npy_data`, runs the spectrogram through the multi-decoder model, and generates audio using the ground truth parameter and the infered parameters. You can change parameters for the inference by running
 
-`python run_inference.py -md <model_dir> -dd <data_dir> -m <model> -s <sample> -l <latent_size>`
+`python run_inference.py -md <model_dir> -dd <data_dir> -m <model> -s <sample> -l <latent_size> -sy <synth> -hp <hpss> -a`
 
 where `<model_dir>` is the directory for trained models (default is "saved_models),
 
@@ -73,7 +73,13 @@ where `<model_dir>` is the directory for trained models (default is "saved_model
 
 `<sample>` is the integer index of the test set to be selected (default is -1. This means a random sample will be selected),
 
-and `<latent_size>` is the integer size of the latent dimmension if the multi-decoder model is selected
+`<latent_size>` is the integer size of the latent dimmension if the multi-decoder model is selected
+
+`<synth>` selects samples only from test set examples generated from the selected synthesizer out of [all, serum, diva, tyrell]
+
+`<hpss>` selects samples only from test set examples generated with the selected harmonic percentage out of [all, 20, 40, 60, 80, 100]
+
+and `-a` means that the model will generate output of all the different decoders in the model.
 
 ## Issues
 
