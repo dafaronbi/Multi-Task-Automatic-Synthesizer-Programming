@@ -198,7 +198,7 @@ def main():
 
     #create model
     if args.model == "multi":
-        m = model.vae_multi(64, i_dim, test_serum_params.shape[-1], test_diva_params.shape[-1], test_tyrell_params.shape[-1], model.optimizer, warmup_it)
+        m = model.vae_multi(args.latent_size, i_dim, test_serum_params.shape[-1], test_diva_params.shape[-1], test_tyrell_params.shape[-1], model.optimizer, warmup_it)
 
     if args.model == "single":
         m = model.vae_single(64, i_dim, test_diva_params.shape[-1], model.optimizer, warmup_it)
@@ -253,9 +253,9 @@ def main():
             audio_pd = generate_audio(params_pd, "diva")
             audio_pt = generate_audio(params_pt, "tyrell")
 
-            wavfile.write(name + "_" + synth + "_p_multi_s.wav", SAMPLING_RATE, audio_ps)
-            wavfile.write(name + "_" + synth + "_p_multi_d.wav", SAMPLING_RATE, audio_pd)
-            wavfile.write(name + "_" + synth + "_p_multi_t.wav", SAMPLING_RATE, audio_pt)
+            wavfile.write(name + "_" + synth + "_L" + str(args.latent_size) + "_p_multi_s.wav", SAMPLING_RATE, audio_ps)
+            wavfile.write(name + "_" + synth + "_L" + str(args.latent_size) + "_p_multi_d.wav", SAMPLING_RATE, audio_pd)
+            wavfile.write(name + "_" + synth + "_L" + str(args.latent_size) + "_p_multi_t.wav", SAMPLING_RATE, audio_pt)
 
         else:
             out = m.predict([test_spec_data[[s_index]], test_serum_masks[[s_index]], test_diva_masks[[s_index]], test_tyrell_masks[[s_index]]])
@@ -263,7 +263,8 @@ def main():
             params = out[synth_to_index[test_synth[s_index]] + 1][0]
             
             audio_p = generate_audio(params, synth)
-            wavfile.write(name + "_" + synth + "_p_multi.wav", SAMPLING_RATE, audio_p)
+
+            wavfile.write(name + "_" + synth + "_L" + str(args.latent_size) + "_p_multi.wav", SAMPLING_RATE, audio_p)
 
     if args.model == "single":
         out = m.predict([test_spec_data[[s_index]], test_masks[[s_index]]])
