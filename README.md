@@ -1,5 +1,5 @@
 # Multi Task Automatic-Synthesizer-Programming
-This is the code for the multi VST automatic synthesizer programming project. this software was use in the 2023 ICASSP paper **Exploring Approaches to Multi-Task Automatic Synthesizer Programming**.
+This is the code for the multi VST automatic synthesizer programming project. this software was used in the 2023 ICASSP paper **Exploring Approaches to Multi-Task Automatic Synthesizer Programming**.
 
 ![Multi-Task ASP Diagram](asp-main-diagram.png)
 
@@ -73,11 +73,11 @@ where `<model_dir>` is the directory for trained models (default is "saved_model
 
 `<sample>` is the integer index of the test set to be selected (default is -1. This means a random sample will be selected),
 
-`<latent_size>` is the integer size of the latent dimmension if the multi-decoder model is selected
+`<latent_size>` is the integer size of the latent dimmension if the multi-decoder model is selected (default is 64)
 
-`<synth>` selects samples only from test set examples generated from the selected synthesizer out of [all, serum, diva, tyrell]
+`<synth>` selects samples only from test set examples generated from the selected synthesizer out of [all, serum, diva, tyrell] (default is all)
 
-`<hpss>` selects samples only from test set examples generated with the selected harmonic percentage out of [all, 20, 40, 60, 80, 100]
+`<hpss>` selects samples only from test set examples generated with the selected harmonic percentage out of [all, 20, 40, 60, 80, 100] (default is all)
 
 and `-a` means that the model will generate output of all the different decoders in the model.
 
