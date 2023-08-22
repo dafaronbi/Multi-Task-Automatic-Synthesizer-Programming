@@ -1,5 +1,5 @@
 # Multi Task Automatic-Synthesizer-Programming
-This is the code for the multi VST automatic synthesizer programming project. this software was used in the 2023 ICASSP paper **Exploring [Approaches to Multi-Task Automatic Synthesizer Programming**](https://ieeexplore.ieee.org/document/10095540).
+This is the code for the multi VST automatic synthesizer programming project. this software was used in the 2023 ICASSP paper [**Exploring Approaches to Multi-Task Automatic Synthesizer Programming**](https://ieeexplore.ieee.org/document/10095540).
 
 [WEBSITE](https://dafaronbi.github.io/Multi-Task-Automatic-Synthesizer-Programming/)
 
