@@ -143,10 +143,10 @@
             <div class="container px-4 px-lg-5">
                 <div class="content-section-heading text-center">
                     <h2 class="text-secondary mb-0">Examples</h2>
+                    <h3 class=" mb-0"> Model Comparison</h3>
                     <table class="table">
                         <thead>
                           <tr>
-                            <th scope="col">Preset Name</th>
                             <th scope="col">Ground Truth Audio Example</th>
                             <th scope="col">S-S Audio Example</th>
                             <th scope="col">J-S Audio Example</th>
@@ -155,7 +155,6 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <th scope="col">PAD Chemtrails.fxp</th>
                                 <th scope="col"><audio controls preload="metadata" style=" width:300px;" controlsList="nodownload">
                                     <source src="assets/audio/example1_ground_truth.wav" type="audio/mpeg">
                                     Your browser does not support the audio element.
@@ -173,8 +172,73 @@
                                     Your browser does not support the audio element.
                                     </audio></th>
                               </tr>
+
                         </tbody>
                       </table>
+
+                      <h3 class=" mb-0"> Performance on Different Timbre Qualities</h3>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Ground Truth Audio 100% harmonic</th>
+                            <th scope="col">Prediction Audio 100% harmonic</th>
+                            <th scope="col">Ground Truth Audio 20% harmonic</th>
+                            <th scope="col">Predction Audio 20% harmonic</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="col"><audio controls preload="metadata" style=" width:300px;" controlsList="nodownload">
+                                    <source src="assets/audio/example2-0truth.wav" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                    </audio></th>
+                                <th scope="col"><audio controls preload="metadata" style=" width:300px;" controlsList="nodownload">
+                                    <source src="assets/audio/example2-0predict.wav" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                    </audio></th>
+                                <th scope="col"><audio controls preload="metadata" style=" width:300px;" controlsList="nodownload">
+                                    <source src="assets/audio/example2-20truth.wav" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                    </audio></th>
+                                <th scope="col"><audio controls preload="metadata" style=" width:300px;" controlsList="nodownload">
+                                    <source src="assets/audio/example2-20predict.wav" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                    </audio></th>
+                              </tr>
+
+                        </tbody>
+                      </table>
+
+                      <h3 class=" mb-0"> Performance with Varying Latent Dimension Sizes</h3>
+                      <table class="table">
+                        <thead>
+                          <tr>
+
+                            <th scope="col">Ground Truth Audio</th>
+                            <th scope="col">Prediction (Latent Size 2)</th>
+                            <th scope="col">Predction (Latent Size 64)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="col"><audio controls preload="metadata" style=" width:300px;" controlsList="nodownload">
+                                    <source src="assets/audio/example3-truth.wav" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                    </audio></th>
+                                <th scope="col"><audio controls preload="metadata" style=" width:300px;" controlsList="nodownload">
+                                    <source src="assets/audio/example3-l2.wav" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                    </audio></th>
+                                <th scope="col"><audio controls preload="metadata" style=" width:300px;" controlsList="nodownload">
+                                    <source src="assets/audio/example3-l64.wav" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                    </audio></th>
+                              </tr>
+
+                        </tbody>
+                      </table>
+
+
                 </div>
             </div>
         </section>
